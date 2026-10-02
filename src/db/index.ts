@@ -7,7 +7,8 @@ import * as schema from './schema'
 type Db = ReturnType<typeof createDb>
 
 function createDb() {
-  const raw = process.env.DATABASE_URL
+  // DATABASE_URL_DATABASE_URL: nome criado pela integração Neon da Vercel com o prefixo "DATABASE_URL"
+  const raw = process.env.DATABASE_URL || process.env.DATABASE_URL_DATABASE_URL
   if (!raw) throw new Error('DATABASE_URL não configurada (veja .env.example)')
 
   const url = new URL(raw)
