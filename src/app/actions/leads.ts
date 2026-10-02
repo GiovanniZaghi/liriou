@@ -1,6 +1,6 @@
 'use server'
 
-import { db } from '@/db'
+import { getDb } from '@/db'
 import { leads } from '@/db/schema'
 import { validateLead, type LeadInput, type LeadErrors } from '@/lib/lead'
 
@@ -14,7 +14,7 @@ export async function joinVipListAction(
   if (Object.keys(errors).length) return { ok: false, errors }
 
   try {
-    await db
+    await getDb()
       .insert(leads)
       .values({
         name: input.name.trim(),

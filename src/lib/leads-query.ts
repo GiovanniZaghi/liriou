@@ -1,7 +1,7 @@
 import 'server-only'
 
 import { and, count, desc, eq, gte, ilike, isNull, or, sql, type SQL } from 'drizzle-orm'
-import { db } from '@/db'
+import { getDb } from '@/db'
 import { leads, type Lead } from '@/db/schema'
 
 export const PAGE_SIZE = 50
@@ -38,21 +38,21 @@ export async function listLeads(filters: LeadFilters): Promise<{ rows: Lead[]; t
   const where = whereFor(filters)
   const page = Math.max(1, filters.page ?? 1)
   const [rows, [{ total }]] = await Promise.all([
-    db
+    getDb()
       .select()
       .from(leads)
       .where(where)
       .orderBy(desc(leads.createdAt))
       .limit(PAGE_SIZE)
       .offset((page - 1) * PAGE_SIZE),
-    db.select({ total: count() }).from(leads).where(where),
+    getDb().select({ total: count() }).from(leads).where(where),
   ])
   return { rows, total }
 }
 
 /** Todos os cadastros do filtro, para exportar CSV. */
 export function listAllLeads(filters: LeadFilters) {
-  return db.select().from(leads).where(whereFor(filters)).orderBy(desc(leads.createdAt))
+  return getDb().select().from(leads).where(whereFor(filters)).orderBy(desc(leads.createdAt))
 }
 
 export interface LeadStats {
@@ -72,7 +72,7 @@ export async function getLeadStats(): Promise<LeadStats> {
   const since7 = sql`(date_trunc('day', now() at time zone ${TZ}) - interval '6 days') at time zone ${TZ}`
 
   const [[totals], dailyRows, byPain] = await Promise.all([
-    db
+    getDb()
       .select({
         total: count(),
         today: sql<number>`count(*) filter (where ${leads.createdAt} >= ${todayStart})`.mapWith(Number),
@@ -80,12 +80,12 @@ export async function getLeadStats(): Promise<LeadStats> {
         withPain: sql<number>`count(${leads.pain})`.mapWith(Number),
       })
       .from(leads),
-    db
+    getDb()
       .select({ day: localDay, count: count() })
       .from(leads)
       .where(gte(leads.createdAt, since14))
       .groupBy(localDay),
-    db
+    getDb()
       .select({ pain: leads.pain, count: count() })
       .from(leads)
       .groupBy(leads.pain)

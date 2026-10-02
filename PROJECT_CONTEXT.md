@@ -41,6 +41,17 @@ npm run dev          # http://localhost:3000  ·  painel em /dashboard
 
 ---
 
+## Deploy (Vercel + Neon)
+
+- Banco de produção: **Neon** (`neondb`). Na Vercel, `DATABASE_URL` = URL **com `-pooler`**.
+- `src/db/index.ts` cria a conexão no primeiro uso (`getDb()`), nunca na importação: o build roda sem `DATABASE_URL`.
+- A conexão remove `channel_binding` da URL (o postgres-js o repassaria ao servidor) e desliga prepared statements quando o host é `-pooler` (PgBouncer).
+- Migrations rodam da máquina local, pela conexão direta:
+  `DATABASE_URL_UNPOOLED='<url sem -pooler>' npm run db:migrate`
+- Variáveis obrigatórias na Vercel: `DATABASE_URL`, `ADMIN_PASSWORD`, `SESSION_SECRET`, `NEXT_PUBLIC_SITE_URL`.
+
+---
+
 ## Breaking Changes do Next.js 16
 
 - **`middleware.ts` → `proxy.ts`** — função exportada: `proxy` (não default)
@@ -87,7 +98,7 @@ src/
 │   └── ui/                         # Design system (Button, Field, SelectField, Logo…)
 ├── db/
 │   ├── schema.ts                   # Tabela leads
-│   └── index.ts                    # Cliente Drizzle (server-only, singleton em dev)
+│   └── index.ts                    # getDb(): cliente Drizzle criado no 1º uso (server-only)
 ├── lib/
 │   ├── leads-query.ts              # listLeads, listAllLeads, getLeadStats (server-only)
 │   ├── session.ts                  # Cookie de sessão assinado (HMAC) do dashboard
@@ -170,7 +181,8 @@ dashboard/page.tsx  (Server, async)
 | Variável               | Uso                                                             |
 | ---------------------- | --------------------------------------------------------------- |
 | `POSTGRES_USER/PASSWORD/DB/PORT` | Criação do banco local pelo docker-compose            |
-| `DATABASE_URL`         | Conexão da app e do drizzle-kit (`?sslmode=require` se o provedor exigir) |
+| `DATABASE_URL`         | Conexão da app (no Neon, a URL `-pooler`; `?sslmode=require` se o provedor exigir) |
+| `DATABASE_URL_UNPOOLED`| Opcional: conexão direta, usada só pelo drizzle-kit (migrations) |
 | `DATABASE_POOL_MAX`    | Opcional, tamanho do pool (padrão 10; use 1 em serverless/PGlite) |
 | `ADMIN_PASSWORD`       | Senha do dashboard                                              |
 | `SESSION_SECRET`       | Chave HMAC do cookie (≥ 32 caracteres; trocar derruba as sessões) |
