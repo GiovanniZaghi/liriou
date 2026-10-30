@@ -13,9 +13,11 @@ const dateTime = new Intl.DateTimeFormat('pt-BR', {
 })
 
 const number = new Intl.NumberFormat('pt-BR')
+const brl = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
 
 export const formatDateTime = (d: Date) => dateTime.format(d)
 export const formatNumber = (n: number) => number.format(n)
+export const formatBRL = (n: number) => brl.format(n)
 export const formatPhone = (digits: string) => maskPhone(digits)
 
 /** '2026-09-30' → '30/09' */

@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from 'next'
+import type { Metadata } from 'next'
 import { Instrument_Sans, Instrument_Serif } from 'next/font/google'
 import { Toaster } from 'sonner'
 import { MOTION_STORAGE_KEY, site } from '@/lib/site'
@@ -20,19 +20,8 @@ const instrumentSerif = Instrument_Serif({
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: 'Líriou · Lista VIP da pré-venda',
-  description:
-    'Scrunchies de cetim de alta gramatura que seguram o cabelo sem apertar e com menos marca. Entre para a lista VIP e garanta o kit completo antes de todo mundo.',
-  openGraph: {
-    title: 'Você dorme. O cetim cuida. · Líriou',
-    description: 'Lista VIP da pré-venda: preço especial, recebimento antecipado e brinde para as primeiras.',
-    locale: 'pt_BR',
-    type: 'website',
-  },
-}
-
-export const viewport: Viewport = {
-  themeColor: '#0b2e1f',
+  title: 'Líriou · Scrunchies de cetim',
+  description: 'Acessórios em cetim de alta gramatura que protegem os fios do atrito.',
 }
 
 // Aplica "js" e a preferência de pausa antes da primeira pintura

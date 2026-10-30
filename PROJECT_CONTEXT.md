@@ -1,4 +1,8 @@
-# Líriou — Landing Page Lista VIP (Next.js)
+# Líriou — Loja + Landing Page Lista VIP (Next.js)
+
+**Loja (e-commerce)** em `/` e landing page de pré-venda em `/pre-venda`.
+
+A loja segue o layout de referência enviado pela cliente (HTML "quiet luxury", paleta clara). Por enquanto é **só layout**: catálogo em `src/lib/catalog.ts`, sacola no navegador (localStorage), sem checkout, sem banco.
 
 Landing page de pré-venda dos **scrunchies de cetim Líriou**. Objetivo único: captar cadastros para a lista VIP ("Club de Lirious Lovers"), que recebe o link da pré-venda pelo WhatsApp antes da abertura pública. Os cadastros ficam num PostgreSQL e são consultados no **dashboard** interno (`/dashboard`).
 
@@ -15,7 +19,8 @@ Design: [Figma · Líriou - Layout](https://www.figma.com/proto/zWR73kpD6YxHXHff
 | PostgreSQL               | 17       | Banco (local via `docker-compose.yml`)         |
 | Drizzle ORM + drizzle-kit| ^0.45 / ^0.31 | Schema, queries tipadas e migrations      |
 | postgres (postgres-js)   | ^3.4     | Driver                                         |
-| sonner                   | ^2.0.7   | Toasts (erro de envio, "Link copiado")         |
+| sonner                   | ^2.0.7   | Toasts (erro de envio, "Link copiado", loja)   |
+| lucide-react             | ^1.65    | Ícones da loja (marcas em `loja/brand-icons.tsx`) |
 | clsx + tailwind-merge    | —        | `cn()`                                         |
 | React Compiler           | 1.0.0    | Otimização de re-renders                       |
 
@@ -79,9 +84,12 @@ src/
 │   │   └── export/route.ts         # GET → CSV dos cadastros (mesmos filtros)
 │   ├── privacidade/page.tsx
 │   ├── termos/page.tsx
-│   ├── globals.css                 # Tokens, tipografia, keyframes, pausa de animações
-│   ├── layout.tsx                  # Fontes, metadata, boot script, Toaster
-│   └── page.tsx                    # Landing page
+│   ├── (loja)/
+│   │   ├── layout.tsx              # Casca da loja: Inter + Playfair, StoreProvider, header, footer, modais
+│   │   └── page.tsx                # Home da loja (/)
+│   ├── pre-venda/page.tsx          # Landing page da lista VIP (/pre-venda)
+│   ├── globals.css                 # Tokens, tipografia, keyframes, pausa de animações, estilos .loja
+│   └── layout.tsx                  # Fontes, metadata base, boot script, Toaster
 ├── components/
 │   ├── dashboard/
 │   │   ├── dashboard-header.tsx    # Logo + "Ver site" + Sair
@@ -93,6 +101,13 @@ src/
 │   │   ├── pagination.tsx          # 50 por página
 │   │   ├── login-form.tsx
 │   │   └── logout-button.tsx
+│   ├── loja/                       # E-commerce
+│   │   ├── store-provider.tsx      # Contexto: sacola (localStorage) + modal aberto (um por vez)
+│   │   ├── store-dialogs.tsx       # Renderiza o modal ativo; boas-vindas, reel e busca
+│   │   ├── dialog.tsx              # <dialog> nativo (modal · drawer · fullscreen) + CloseButton
+│   │   ├── cart-drawer.tsx · product-modal.tsx · creator-modal.tsx
+│   │   ├── store-header.tsx · store-footer.tsx · hero.tsx · manifesto.tsx · collection.tsx · reels.tsx
+│   │   └── triggers.tsx            # DialogTrigger / AddToCartButton (usáveis em Server Components)
 │   ├── landing/                    # Blocos da landing (hero, vip-form/, benefits, faq…)
 │   ├── legal/legal-page.tsx
 │   └── ui/                         # Design system (Button, Field, SelectField, Logo…)
@@ -102,6 +117,7 @@ src/
 ├── lib/
 │   ├── leads-query.ts              # listLeads, listAllLeads, getLeadStats (server-only)
 │   ├── session.ts                  # Cookie de sessão assinado (HMAC) do dashboard
+│   ├── catalog.ts                  # Produtos, kits, reels, depoimentos, cupons, frete (provisório)
 │   ├── lead.ts                     # Tipos, opções do select e validação (cliente + servidor)
 │   ├── format.ts                   # Datas (America/Sao_Paulo), telefone, rótulos
 │   ├── masks.ts · analytics.ts · motion.ts · site.ts · utils.ts
@@ -114,7 +130,8 @@ src/
 
 | Tela                  | Rota                 | Acesso   |
 | --------------------- | -------------------- | -------- |
-| Landing + lista VIP   | `/`                  | Público  |
+| Loja (e-commerce)     | `/`                  | Público  |
+| Landing + lista VIP   | `/pre-venda`         | Público  |
 | Termos de Uso         | `/termos`            | Público  |
 | Aviso de Privacidade  | `/privacidade`       | Público  |
 | Login do painel       | `/dashboard/login`   | Público (redireciona se já logado) |
@@ -199,6 +216,14 @@ dashboard/page.tsx  (Server, async)
 - **Botões**: `primary` (verde-noite, sobre claro) · `rosa` (sobre escuro) · `verde` (compartilhar)
 - **Breakpoint** `lg` = 960px · conteúdo máx. 1280px, gutter 20px / 40px
 
+### Loja
+
+- Escopo `.loja` (no layout de `(loja)`): troca `--font-sans`/`--font-serif` por Inter/Playfair e o fundo para `areia`, sem afetar landing nem dashboard
+- **Cores**: `areia` #fbf9f7 (fundo), `algodao` #f4efeb (cards), `borda`, `salvia` #6a7b6c (ação), `salvia-900`, `rosa`, `rosa-50`, `grafite` #2c2a29 (texto), `cinza` #787370 (secundário)
+- Botões em `components/loja/styles.ts` (`btnPrimary`, `btnOutline`, `btnSmall`)
+- Modais: `<dialog>` nativo aberto ao montar; Esc fecha via `onCancel` (não `onClose`, que dispara ao trocar de modal)
+- Pop-up de boas-vindas: 2s após a 1ª visita da sessão, só se nenhum modal estiver aberto (`offerDialog`)
+
 ## Animação e acessibilidade (landing)
 
 - `[data-reveal]` entra ao aparecer; `--i` escalona 90ms e `--d` atrasa. Só esconde com a classe `js` no `<html>`.
@@ -217,6 +242,9 @@ dashboard/page.tsx  (Server, async)
 - **`id` de entidades**: sempre `string` (UUID)
 
 ## Pendências
+
+- Loja: checkout/pagamento, catálogo e pedidos no banco + dashboard, salvar inscrições de Creator, fotos/vídeos reais (hoje placehold.co), perfis oficiais das redes, depoimentos reais (os atuais são do layout de referência)
+- Frete grátis está para qualquer CEP acima de R$ 150 (o anúncio diz "em SP"): aplicar a regra por CEP quando houver cálculo real
 
 - Validar com a cliente: opções do select, respostas do FAQ, íntegra de Termos/Privacidade, data de atualização e e-mail de contato (`lib/site.ts`)
 - Selo de prova social no hero (só com ≥ 50 cadastros reais; o total já sai de `getLeadStats()`)

@@ -9,7 +9,13 @@ type Db = ReturnType<typeof createDb>
 function createDb() {
   // DATABASE_URL_DATABASE_URL: nome criado pela integração Neon da Vercel com o prefixo "DATABASE_URL"
   const raw = process.env.DATABASE_URL || process.env.DATABASE_URL_DATABASE_URL
-  if (!raw) throw new Error('DATABASE_URL não configurada (veja .env.example)')
+  if (!raw) {
+    // Só os nomes (nunca valores), para diagnosticar prefixos da integração
+    const seen = Object.keys(process.env).filter((k) => /DATABASE|POSTGRES|^PG/.test(k))
+    throw new Error(
+      `DATABASE_URL não configurada (veja .env.example). Variáveis de banco disponíveis: ${seen.join(', ') || 'nenhuma'}`,
+    )
+  }
 
   const url = new URL(raw)
   // Parâmetro do libpq que o postgres-js repassaria ao servidor como configuração desconhecida

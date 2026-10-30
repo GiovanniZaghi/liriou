@@ -13,6 +13,17 @@
   --color-linho: #eadfd2;
   --color-tinta: #10231a;
 
+  /* Loja (e-commerce): paleta clara "quiet luxury" */
+  --color-areia: #fbf9f7;
+  --color-algodao: #f4efeb;
+  --color-borda: #e8e2dd;
+  --color-salvia: #6a7b6c;
+  --color-salvia-900: #546356;
+  --color-rosa: #f2d3d8;
+  --color-rosa-50: #faf0f2;
+  --color-grafite: #2c2a29;
+  --color-cinza: #787370;
+
   --font-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
 
@@ -265,6 +276,56 @@ html.js [data-reveal].is-visible {
 }
 .faq[open] .faq-chevron {
   transform: rotate(180deg);
+}
+
+/* ─── Loja ────────────────────────────────────────────────────────────────── */
+/* Fundo claro também no overscroll e no <body> enquanto a loja está montada */
+html:has(.loja),
+html:has(.loja) body {
+  background: var(--color-areia);
+}
+
+.loja {
+  /* Tipografia própria da loja: Inter (texto) e Playfair Display (editorial) */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
+  font-family: var(--font-sans);
+  color: var(--color-grafite);
+}
+
+.loja ::selection {
+  background: var(--color-rosa);
+  color: var(--color-grafite);
+}
+
+.loja :focus-visible {
+  outline-color: var(--color-salvia);
+}
+
+/* Cursor do lírio 🌸 (campos de texto mantêm o cursor de digitação) */
+.loja,
+.loja a,
+.loja button,
+.loja label {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'><text y='20' font-size='18'>🌸</text></svg>") 6 6, auto;
+}
+
+/* Modais e gaveta (<dialog>): trava a rolagem da página por trás */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+.loja-dialog::backdrop {
+  background: rgb(0 0 0 / 0.5);
+  backdrop-filter: blur(4px);
+}
+.loja-dialog[open] .loja-dialog-panel {
+  animation: dissolveIn var(--t-base) var(--ease-cetim) both;
+}
+.loja-drawer[open] .loja-dialog-panel {
+  animation: drawerIn var(--t-base) var(--ease-cetim) both;
+}
+@keyframes drawerIn {
+  from { transform: translateX(100%); }
 }
 
 /* ─── Pausar animações (WCAG 2.2.2) ───────────────────────────────────────── */

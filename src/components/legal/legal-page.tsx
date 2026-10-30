@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { LogoPrimary } from '@/components/ui/logo'
-import { site } from '@/lib/site'
+import { PRE_SALE_PATH, site } from '@/lib/site'
 
 export interface LegalSection {
   title: string
@@ -18,7 +18,7 @@ export function LegalPage({ title, sections }: LegalPageProps) {
     <div className="ambient min-h-svh">
       <main className="mx-auto w-full max-w-[1440px] px-5 pt-7 pb-24 lg:px-60 lg:pt-20">
         <Link
-          href="/"
+          href={PRE_SALE_PATH}
           className="inline-flex items-center gap-2 text-[17px] leading-[1.45] font-medium text-petala hover:underline lg:text-[19px]"
         >
           <span aria-hidden>←</span> Voltar para a lista VIP

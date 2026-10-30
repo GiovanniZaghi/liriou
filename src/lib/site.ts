@@ -6,6 +6,9 @@ export const site = {
   legalUpdatedAt: '28 de setembro de 2026',
 } as const
 
+/** Rota da landing de pré-venda (lista VIP). A loja fica em `/`. */
+export const PRE_SALE_PATH = '/pre-venda'
+
 export const shareMessage =
   'Entrei na lista VIP da Líriou: scrunchies de cetim com preço especial e brinde na pré-venda. Entra também:'
 

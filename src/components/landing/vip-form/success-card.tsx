@@ -3,13 +3,14 @@
 import { useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 import { track } from '@/lib/analytics'
-import { shareMessage, site } from '@/lib/site'
+import { PRE_SALE_PATH, shareMessage, site } from '@/lib/site'
 import { ButtonLink } from '@/components/ui/button'
 
 /** Estado de sucesso do card (Desktop / 02 Sucesso · Mobile / 06 Sucesso). */
 export function SuccessCard() {
   const titleRef = useRef<HTMLHeadingElement>(null)
-  const shareUrl = `https://wa.me/?text=${encodeURIComponent(`${shareMessage} ${site.url}`)}`
+  const pageUrl = `${site.url}${PRE_SALE_PATH}`
+  const shareUrl = `https://wa.me/?text=${encodeURIComponent(`${shareMessage} ${pageUrl}`)}`
 
   useEffect(() => {
     titleRef.current?.focus()
@@ -18,7 +19,7 @@ export function SuccessCard() {
   async function copyLink() {
     track('copy_link')
     try {
-      await navigator.clipboard.writeText(site.url)
+      await navigator.clipboard.writeText(pageUrl)
       toast.success('Link copiado')
     } catch {
       toast.error('Não foi possível copiar o link')
