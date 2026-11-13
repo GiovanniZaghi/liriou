@@ -3,6 +3,7 @@ import { Collection, Kits } from '@/components/loja/collection'
 import { StoreHero } from '@/components/loja/hero'
 import { Manifesto, TrustBar } from '@/components/loja/manifesto'
 import { Reels, Testimonials } from '@/components/loja/reels'
+import { getCatalog } from '@/lib/api/catalog'
 
 export const metadata: Metadata = {
   title: 'Líriou | Alta performance em cetim & quiet luxury',
@@ -17,14 +18,16 @@ export const metadata: Metadata = {
   },
 }
 
-export default function StorePage() {
+export default async function StorePage() {
+  const products = await getCatalog()
+
   return (
     <>
       <StoreHero />
       <Manifesto />
       <TrustBar />
-      <Collection />
-      <Kits />
+      <Collection products={products} />
+      <Kits products={products} />
       <Reels />
       <Testimonials />
     </>

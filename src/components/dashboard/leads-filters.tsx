@@ -1,5 +1,5 @@
 import { PAIN_OPTIONS } from '@/lib/lead'
-import type { LeadFilters } from '@/lib/leads-query'
+import type { LeadFilters } from '@/lib/api/types'
 
 /** Filtros via GET (funcionam sem JS) + exportação CSV com os mesmos filtros. */
 export function LeadsFilters({ filters }: { filters: LeadFilters }) {
@@ -41,7 +41,7 @@ export function LeadsFilters({ filters }: { filters: LeadFilters }) {
           Filtrar
         </button>
         {(filters.q || filters.pain) && (
-          <a href="/dashboard" className="px-2 text-[14px] text-musgo underline hover:text-rubor">
+          <a href="/dashboard/pre-venda" className="px-2 text-[14px] text-musgo underline hover:text-rubor">
             Limpar
           </a>
         )}

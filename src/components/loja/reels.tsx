@@ -1,5 +1,5 @@
 import { Play, Star } from 'lucide-react'
-import { reels, testimonials } from '@/lib/catalog'
+import { reels, testimonials } from '@/lib/content'
 import { SectionTitle } from './section-title'
 import { sectionPad } from './styles'
 import { DialogTrigger } from './triggers'
@@ -10,7 +10,7 @@ export function Reels() {
       <div className="mx-auto max-w-7xl">
         <div data-reveal className="mb-12 flex flex-col justify-between md:flex-row md:items-end">
           <div>
-            <span className="eyebrow text-salvia">Experiência Real</span>
+            <span className="eyebrow text-rubor">Experiência Real</span>
             <h2 id="ritual-titulo" className="mt-2 font-serif text-3xl text-grafite sm:text-4xl">
               O Ritual em Movimento
             </h2>
@@ -37,7 +37,7 @@ export function Reels() {
               />
               <div className="absolute inset-0 flex flex-col justify-between bg-linear-to-t from-black/80 via-transparent to-transparent p-6 text-white">
                 <div className="flex items-center justify-between">
-                  <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-medium backdrop-blur-md">@liriou.u</span>
+                  <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-medium backdrop-blur-md">@lirio.u</span>
                   <span className="rounded-full bg-white/30 p-2.5 backdrop-blur-md">
                     <Play className="size-3 fill-current" aria-hidden />
                   </span>
@@ -67,7 +67,7 @@ export function Testimonials() {
             style={{ '--i': i } as React.CSSProperties}
             className="space-y-4 rounded-3xl border border-borda bg-algodao p-8"
           >
-            <div className="flex gap-1 text-salvia" role="img" aria-label="5 de 5 estrelas">
+            <div className="flex gap-1 text-rubor" role="img" aria-label="5 de 5 estrelas">
               {Array.from({ length: 5 }, (_, s) => (
                 <Star key={s} className="size-3 fill-current" aria-hidden />
               ))}

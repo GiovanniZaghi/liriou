@@ -1,4 +1,4 @@
-import type { Lead } from '@/db/schema'
+import type { Lead } from '@/lib/api/types'
 import { formatDateTime, formatPhone, painLabel } from '@/lib/format'
 
 export function LeadsTable({ rows }: { rows: Lead[] }) {
@@ -26,7 +26,7 @@ export function LeadsTable({ rows }: { rows: Lead[] }) {
         <tbody>
           {rows.map((lead) => (
             <tr key={lead.id} className="border-b border-linho/70 last:border-0 hover:bg-leite/60">
-              <td className="px-5 py-3.5 whitespace-nowrap text-musgo tabular-nums">{formatDateTime(lead.createdAt)}</td>
+              <td className="px-5 py-3.5 whitespace-nowrap text-musgo tabular-nums">{formatDateTime(new Date(lead.createdAt))}</td>
               <td className="px-5 py-3.5 font-medium whitespace-nowrap text-noite-900">{lead.name}</td>
               <td className="px-5 py-3.5">
                 <a href={`mailto:${lead.email}`} className="text-tinta hover:text-rubor hover:underline">

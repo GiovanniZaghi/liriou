@@ -4,7 +4,6 @@ import { Menu, Search, ShoppingBag, Sparkles, WandSparkles, X } from 'lucide-rea
 import Link from 'next/link'
 import { useState } from 'react'
 import { formatBRL } from '@/lib/format'
-import { FREE_SHIPPING_THRESHOLD } from '@/lib/catalog'
 import { PRE_SALE_PATH } from '@/lib/site'
 import { WhatsAppIcon } from './brand-icons'
 import { useStore } from './store-provider'
@@ -19,25 +18,25 @@ const NAV = [
 ]
 
 export function StoreHeader() {
-  const { openDialog, count } = useStore()
+  const { openDialog, count, settings } = useStore()
   const [menuOpen, setMenuOpen] = useState(false)
   const closeMenu = () => setMenuOpen(false)
 
   return (
     <>
-      <div className="flex items-center justify-between gap-4 overflow-hidden bg-grafite px-4 py-2.5 text-xs font-medium tracking-wider text-white">
+      <div className="flex items-center justify-between gap-4 overflow-hidden bg-petala px-4 py-2.5 text-xs font-semibold tracking-wider text-noite-900">
         <div className="hidden sm:block sm:flex-1" />
         <p className="flex flex-1 items-center justify-center gap-2 text-center">
-          <Sparkles className="size-3.5 shrink-0 text-rosa" aria-hidden />
+          <Sparkles className="size-3.5 shrink-0 text-rubor" aria-hidden />
           <span>
-            Evento Especial 31/10 | Envio grátis em SP acima de {formatBRL(FREE_SHIPPING_THRESHOLD).replace(',00', '')}
+            Evento Especial 31/10 | Envio grátis em SP acima de {formatBRL(settings.freeShippingThreshold).replace(',00', '')}
           </span>
         </p>
         <div className="hidden flex-1 justify-end sm:flex">
           <button
             type="button"
             onClick={() => openDialog({ type: 'creator' })}
-            className="flex items-center gap-1.5 font-semibold text-rosa hover:underline"
+            className="flex items-center gap-1.5 font-semibold text-rubor hover:underline"
           >
             <WandSparkles className="size-3.5" aria-hidden /> Seja uma Creator Líriou
           </button>

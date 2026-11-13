@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { CREATOR_KITS } from '@/lib/catalog'
+import { CREATOR_KITS } from '@/lib/content'
 import { maskPhone } from '@/lib/masks'
 import { CloseButton, Dialog } from './dialog'
 import { useStore } from './store-provider'
@@ -24,7 +24,7 @@ export function CreatorModal() {
   return (
     <Dialog label="Seja uma Creator Líriou" onClose={closeDialog} panelClassName="max-w-2xl p-8 sm:p-12">
       <CloseButton onClick={closeDialog} />
-      <span className="eyebrow text-salvia">Exclusivo Embaixadoras</span>
+      <span className="eyebrow text-rubor">Exclusivo Embaixadoras</span>
       <h2 className="mt-1 font-serif text-3xl text-grafite">Seja uma Creator Líriou</h2>
       <p className="mt-2 mb-6 text-xs leading-relaxed text-cinza">
         Preencha seus dados e escolha o seu <strong className="font-semibold text-grafite">Kit Creator</strong> para

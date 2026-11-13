@@ -13,16 +13,20 @@
   --color-linho: #eadfd2;
   --color-tinta: #10231a;
 
-  /* Loja (e-commerce): paleta clara "quiet luxury" */
-  --color-areia: #fbf9f7;
-  --color-algodao: #f4efeb;
-  --color-borda: #e8e2dd;
-  --color-salvia: #6a7b6c;
-  --color-salvia-900: #546356;
-  --color-rosa: #f2d3d8;
-  --color-rosa-50: #faf0f2;
-  --color-grafite: #2c2a29;
-  --color-cinza: #787370;
+  /*
+   * Loja (e-commerce) — mesma identidade do logo/Instagram: verde-noite, verde-folha, rosa-pétala e creme.
+   * Os nomes antigos dos tokens foram mantidos (os componentes não mudam); os valores agora são os da marca.
+   */
+  --color-areia: #fbf3ec; /* fundo da página: creme (leite) */
+  --color-algodao: #ffe8ef; /* superfícies suaves: rosa-pétala clarinho */
+  --color-borda: #f0d9dc; /* bordas: rosado */
+  --color-salvia: #0b2e1f; /* ação principal (botões, preços): verde-noite */
+  --color-salvia-900: #12402c; /* hover da ação principal */
+  --color-rosa: #ffcfdd; /* pétala */
+  --color-rosa-50: #ffe8ef;
+  --color-grafite: #10231a; /* texto: tinta verde-escura */
+  --color-cinza: #5c6e63; /* texto secundário: musgo */
+  --color-folha-claro: #2fa366; /* degradê das folhas do logo */
 
   --font-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
@@ -286,20 +290,24 @@ html:has(.loja) body {
 }
 
 .loja {
-  /* Tipografia própria da loja: Inter (texto) e Playfair Display (editorial) */
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
+  /* Mesma tipografia da marca (Instrument Sans + Instrument Serif, carregadas no layout raiz) */
   font-family: var(--font-sans);
   color: var(--color-grafite);
+  background: var(--color-areia);
 }
 
 .loja ::selection {
   background: var(--color-rosa);
-  color: var(--color-grafite);
+  color: var(--color-noite-900);
 }
 
 .loja :focus-visible {
-  outline-color: var(--color-salvia);
+  outline-color: var(--color-rubor);
+}
+
+/* Títulos em serifa da marca: um pouco maiores e mais justos que o padrão */
+.loja .font-serif {
+  letter-spacing: -0.01em;
 }
 
 /* Cursor do lírio 🌸 (campos de texto mantêm o cursor de digitação) */

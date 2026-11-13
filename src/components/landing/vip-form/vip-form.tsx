@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
-import { joinVipListAction } from '@/app/actions/leads'
+import { joinVipList } from '@/lib/api/leads'
 import { track } from '@/lib/analytics'
 import {
   PAIN_OPTIONS,
@@ -76,7 +76,7 @@ export function VipForm() {
 
     setStatus('submitting')
     const [result] = await Promise.all([
-      joinVipListAction(values, readUtm()).catch(() => ({ ok: false as const })),
+      joinVipList(values, readUtm()).catch(() => ({ ok: false as const })),
       new Promise((r) => setTimeout(r, MIN_LOADING_MS)),
     ])
 

@@ -3,7 +3,7 @@
 import { Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { getProduct, products, type Reel } from '@/lib/catalog'
+import type { Reel } from '@/lib/content'
 import { formatBRL } from '@/lib/format'
 import { PRE_SALE_PATH } from '@/lib/site'
 import { CartDrawer } from './cart-drawer'
@@ -16,7 +16,7 @@ const WELCOME_STORAGE_KEY = 'liriou:welcome-seen'
 
 /** Renderiza o modal aberto no momento (um por vez) e agenda o pop-up de boas-vindas. */
 export function StoreDialogs() {
-  const { dialog, offerDialog } = useStore()
+  const { dialog, offerDialog, getProduct } = useStore()
 
   // Pop-up da lista VIP: 2s após a primeira visita da sessão
   useEffect(() => {
@@ -93,11 +93,11 @@ function ReelModal({ reel }: { reel: Reel }) {
 }
 
 function SearchModal() {
-  const { closeDialog, openDialog } = useStore()
+  const { closeDialog, openDialog, products } = useStore()
   const [query, setQuery] = useState('')
   const q = query.trim().toLocaleLowerCase('pt-BR')
   const results = q
-    ? products.filter((p) => `${p.name} ${p.colorName}`.toLocaleLowerCase('pt-BR').includes(q))
+    ? products.filter((p) => `${p.name} ${p.colorName ?? ''}`.toLocaleLowerCase('pt-BR').includes(q))
     : []
 
   return (

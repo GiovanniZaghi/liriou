@@ -1,5 +1,5 @@
 import { formatNumber } from '@/lib/format'
-import type { LeadStats } from '@/lib/leads-query'
+import type { LeadStats } from '@/lib/api/types'
 
 export function StatTiles({ stats }: { stats: LeadStats }) {
   const answeredPct = stats.total ? Math.round((stats.withPain / stats.total) * 100) : 0

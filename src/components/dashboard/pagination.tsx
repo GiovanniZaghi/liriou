@@ -1,24 +1,26 @@
 import Link from 'next/link'
-import type { LeadFilters } from '@/lib/leads-query'
 import { cn } from '@/lib/utils'
 
 interface PaginationProps {
-  filters: LeadFilters
+  /** Rota da listagem, ex.: /dashboard/estoque */
+  basePath: string
+  /** Filtros atuais (mantidos ao trocar de página) */
+  query?: Record<string, string | number | boolean | undefined>
+  page: number
   total: number
   pageSize: number
 }
 
-export function Pagination({ filters, total, pageSize }: PaginationProps) {
+export function Pagination({ basePath, query = {}, page: requested, total, pageSize }: PaginationProps) {
   const pages = Math.ceil(total / pageSize)
-  const page = Math.min(filters.page ?? 1, Math.max(pages, 1))
+  const page = Math.min(requested, Math.max(pages, 1))
   if (pages <= 1) return null
 
   const href = (p: number) => {
     const sp = new URLSearchParams()
-    if (filters.q) sp.set('q', filters.q)
-    if (filters.pain) sp.set('pain', filters.pain)
+    for (const [k, v] of Object.entries(query)) if (v !== undefined && v !== '' && v !== false) sp.set(k, String(v))
     if (p > 1) sp.set('page', String(p))
-    return `/dashboard${sp.size ? `?${sp}` : ''}`
+    return `${basePath}${sp.size ? `?${sp}` : ''}`
   }
 
   const link = 'grid h-10 min-w-10 place-items-center rounded-full px-3 text-[14px]'
