@@ -1,10 +1,11 @@
 import { Check, Mail, MessageCircle } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, unstable_rethrow } from 'next/navigation'
 import { StageBadge } from '@/components/dashboard/clientes/journeys-table'
+import { ShipmentCard } from '@/components/dashboard/clientes/shipment-card'
 import { dashBtn, PageHeader, pageShell } from '@/components/dashboard/page-header'
-import { getJourney } from '@/lib/api/admin'
+import { getJourney, getShipment } from '@/lib/api/admin'
 import { ApiError } from '@/lib/api/http'
 import type { JourneyDetail } from '@/lib/api/types'
 import { formatBRL, formatDateTime, formatPhone } from '@/lib/format'
@@ -28,6 +29,14 @@ export default async function ClienteDetalhePage({ params }: { params: Params })
 
   const c = j.customer
   const a = j.shippingAddress
+  // Envio (Frenet) só existe para pedidos; se a API de envios falhar, o resto da página continua
+  const shipment = j.order
+    ? await getShipment(j.order.id).catch((err) => {
+        unstable_rethrow(err)
+        console.error('[envio]', err)
+        return null
+      })
+    : null
 
   return (
     <main className={pageShell}>
@@ -122,6 +131,8 @@ export default async function ClienteDetalhePage({ params }: { params: Params })
               <p className="text-musgo">Ainda não informou o endereço.</p>
             )}
           </Card>
+
+          {shipment && <ShipmentCard info={shipment} cartId={j.cartId} />}
 
           {j.otherSessions.length > 0 && (
             <Card title="Outras visitas desta cliente">

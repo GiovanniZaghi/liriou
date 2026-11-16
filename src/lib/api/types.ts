@@ -26,16 +26,32 @@ export interface CatalogProduct {
   inStock: boolean
 }
 
-export interface ShippingOption {
-  id: string
+/** Opção de frete cotada na Frenet para um CEP */
+export interface ShippingQuoteOption {
+  serviceCode: string
+  carrier: string
+  service: string
+  /** "Correios · SEDEX" */
   label: string
+  /** Preço para a cliente (0 quando a sacola tem frete grátis) */
   price: number
+  originalPrice: number
+  /** Prazo em dias úteis */
+  deliveryDays: number
+}
+
+export interface ShippingQuoteResult {
+  cep: string
+  freeShipping: boolean
+  options: ShippingQuoteOption[]
 }
 
 export interface StoreSettings {
   freeShippingThreshold: number
+  /** Parcelas sem juros no cartão */
   installments: number
-  shippingOptions: ShippingOption[]
+  /** Desconto extra (%) no Pix à vista */
+  pixDiscountPercent: number
 }
 
 export interface CartItem {
@@ -65,6 +81,8 @@ export interface Cart {
     minSubtotal: number
   } | null
   shippingOptionId: string | null
+  /** Frete escolhido (cotado para `cep`) */
+  shipping: (ShippingQuoteOption & { cep: string }) | null
   totals: {
     subtotal: number
     discount: number
@@ -132,6 +150,11 @@ export interface AdminProduct {
   /** true = visível na vitrine */
   isActive: boolean
   sortOrder: number
+  /** Medidas de envio (frete Frenet) */
+  weightGrams: number
+  lengthCm: number
+  widthCm: number
+  heightCm: number
   createdAt: string
   updatedAt: string
 }
@@ -154,6 +177,10 @@ export interface ProductPayload {
   minStock: number
   isActive: boolean
   sortOrder: number
+  weightGrams: number
+  lengthCm: number
+  widthCm: number
+  heightCm: number
   initialStock?: number
 }
 
@@ -228,6 +255,73 @@ export interface Order {
   itemCount: number
   totals: { subtotal: number; discount: number; shipping: number; total: number }
   createdAt: string
+}
+
+// ─── Envio (Frenet) ───────────────────────────────────────────────────────────
+
+export interface TrackingEvent {
+  /** dd/MM/yyyy HH:mm */
+  at: string
+  description: string
+  location: string
+  type: string
+}
+
+export interface ShipmentInfo {
+  orderId: string
+  orderNumber: number
+  shipping: {
+    label: string
+    carrier: string | null
+    service: string | null
+    deliveryDays: number | null
+    /** O que a cliente pagou */
+    charged: number
+    /** Custo cotado na transportadora */
+    quoted: number | null
+  }
+  /** Token de parceiro Frenet configurado na API */
+  labelsEnabled: boolean
+  canCreate: boolean
+  blockedReason: string | null
+  shipment: {
+    id: string
+    providerId: string
+    status: string
+    trackingNumber: string | null
+    trackingUrl: string | null
+    labelUrl: string | null
+    declarationUrl: string | null
+    lastEvent: TrackingEvent | null
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+// ─── Pagamento (Mercado Pago) ─────────────────────────────────────────────────
+
+export type PaymentMethod = 'pix' | 'credit_card' | 'boleto'
+export type PaymentStatus = 'pending' | 'approved' | 'rejected' | 'cancelled' | 'refunded'
+
+export interface Payment {
+  id: string
+  orderId: string
+  orderStatus: OrderStatus
+  method: PaymentMethod
+  status: PaymentStatus
+  /** Motivo do gateway (ex.: rejected_by_issuer, waiting_transfer) */
+  statusDetail: string
+  amount: number
+  installments: number
+  pix: { qrCode: string; qrCodeBase64: string | null; ticketUrl: string | null } | null
+  boleto: { ticketUrl: string; digitableLine: string | null } | null
+  expiresAt: string | null
+  createdAt: string
+}
+
+export interface StartPaymentInput {
+  method: PaymentMethod
+  card?: { token: string; brand: string; installments: number }
 }
 
 // ─── Acompanhamento de clientes (dashboard) ───────────────────────────────────

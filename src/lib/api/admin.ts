@@ -18,6 +18,7 @@ import type {
   Paginated,
   ProductFilters,
   ProductPayload,
+  ShipmentInfo,
   StockMovement,
   StockMovementType,
 } from './types'
@@ -96,6 +97,16 @@ export const listJourneys = ({ q, stage, page = 1 }: JourneyFilters) =>
   adminFetch<Paginated<JourneyRow>>(`/admin/customers${toQuery({ q, stage, page, pageSize: JOURNEYS_PAGE_SIZE })}`)
 
 export const getJourney = (cartId: string) => adminFetch<JourneyDetail>(`/admin/customers/${cartId}`)
+
+// ─── Envios (Frenet) ──────────────────────────────────────────────────────────
+
+export const getShipment = (orderId: string) => adminFetch<ShipmentInfo>(`/admin/orders/${orderId}/shipment`)
+
+export const createShipment = (orderId: string) =>
+  adminFetch<ShipmentInfo>(`/admin/orders/${orderId}/shipment`, { method: 'POST' })
+
+export const refreshShipmentLabel = (orderId: string) =>
+  adminFetch<ShipmentInfo>(`/admin/orders/${orderId}/shipment/refresh`, { method: 'POST' })
 
 // ─── Cupons ───────────────────────────────────────────────────────────────────
 

@@ -24,6 +24,7 @@ import {
 import { formatBRL } from '@/lib/format'
 import { maskCep, maskCpf, maskPhone } from '@/lib/masks'
 import { cn } from '@/lib/utils'
+import { ShippingQuotePicker } from '../loja/shipping-quote-picker'
 import { useStore } from '../loja/store-provider'
 import { btnPrimary } from '../loja/styles'
 import { CheckoutField } from './checkout-field'
@@ -154,8 +155,9 @@ export function CheckoutFlow() {
     e.preventDefault()
     const errors = validateAddress(address)
     setAddressErrors(errors)
-    const shippingId = cart?.shippingOptionId
-    setShippingError(shippingId ? undefined : 'Escolha uma opção de envio')
+    // O frete precisa ter sido cotado para o CEP deste endereço
+    const shippingId = cart?.shipping?.cep === address.cep.replace(/\D/g, '') ? cart.shipping.serviceCode : undefined
+    setShippingError(shippingId ? undefined : 'Escolha uma opção de envio para este CEP')
     if (Object.keys(errors).length) return focusFirst(errors)
     if (!shippingId) return
 
@@ -170,7 +172,7 @@ export function CheckoutFlow() {
   }
 
   async function placeOrder() {
-    if (!cart?.shippingOptionId) return goTo(1)
+    if (!cart?.shippingOptionId || cart.shipping?.cep !== address.cep.replace(/\D/g, '')) return goTo(1)
     if (unavailable.length) return toast.error('Ajuste os itens sem estoque suficiente antes de continuar.')
     setPlacing(true)
     try {
@@ -285,19 +287,13 @@ export function CheckoutFlow() {
                     Você ganhou envio grátis! Escolha como prefere receber.
                   </p>
                 )}
-                <div className="space-y-2">
-                  {settings.shippingOptions.map((opt) => (
-                    <label key={opt.id}
-                      className="flex cursor-pointer items-center justify-between gap-3 rounded-2xl border border-borda bg-areia p-4 text-sm hover:border-salvia has-checked:border-salvia has-checked:bg-white">
-                      <span className="flex items-center gap-3">
-                        <input type="radio" name="shipping" checked={cart.shippingOptionId === opt.id}
-                          onChange={() => { setShippingError(undefined); store.setShippingId(opt.id) }} className="accent-salvia" />
-                        {opt.label}
-                      </span>
-                      <span className="font-semibold whitespace-nowrap">{cart.totals.freeShipping ? 'Grátis' : formatBRL(opt.price)}</span>
-                    </label>
-                  ))}
-                </div>
+                {address.cep.replace(/\D/g, '').length === 8 ? (
+                  <ShippingQuotePicker cep={address.cep} onSelect={() => setShippingError(undefined)} />
+                ) : (
+                  <p className="rounded-2xl border border-dashed border-borda bg-areia px-4 py-3 text-xs text-cinza">
+                    Informe o CEP para ver as opções de envio, prazos e valores.
+                  </p>
+                )}
                 {shippingError && <p role="alert" className="mt-2 text-[11px] text-rubor">{shippingError}</p>}
               </fieldset>
 
@@ -323,9 +319,12 @@ export function CheckoutFlow() {
                 </p>
                 <p>{address.district} · {address.city}/{address.state.toUpperCase()} · CEP {address.cep}</p>
                 <p className="mt-1 text-grafite">
-                  {settings.shippingOptions.find((o) => o.id === cart.shippingOptionId)?.label}
+                  {cart.shipping?.label}
                   {' · '}
                   {cart.totals.shipping === 0 ? 'Grátis' : formatBRL(cart.totals.shipping ?? 0)}
+                  {cart.shipping && cart.shipping.deliveryDays > 0 && (
+                    <span className="text-cinza"> · até {cart.shipping.deliveryDays} dias úteis</span>
+                  )}
                 </p>
               </ReviewBlock>
 

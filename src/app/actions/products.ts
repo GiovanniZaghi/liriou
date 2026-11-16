@@ -73,6 +73,10 @@ function parseProductForm(fd: FormData): ProductPayload {
     kit,
     minStock: int(fd, 'minStock'),
     sortOrder: int(fd, 'sortOrder'),
+    weightGrams: int(fd, 'weightGrams'),
+    lengthCm: int(fd, 'lengthCm'),
+    widthCm: int(fd, 'widthCm'),
+    heightCm: int(fd, 'heightCm'),
     isActive: fd.get('isActive') === 'on',
   }
 }

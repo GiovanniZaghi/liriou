@@ -1,5 +1,5 @@
 import { apiFetch } from './http'
-import type { Cart, CheckoutAddress, CheckoutCustomer } from './types'
+import type { Cart, CheckoutAddress, CheckoutCustomer, ShippingQuoteResult } from './types'
 
 /** Sacola no servidor (chamado do navegador). Toda resposta devolve a sacola já recalculada. */
 export const cartApi = {
@@ -22,8 +22,13 @@ export const cartApi = {
 
   removeCoupon: (cartId: string) => apiFetch<Cart>(`/carts/${cartId}/coupon`, { method: 'DELETE' }),
 
-  selectShipping: (cartId: string, optionId: string) =>
-    apiFetch<Cart>(`/carts/${cartId}/shipping`, { method: 'PUT', body: { optionId } }),
+  /** Opções de frete (Frenet) para o CEP, com o peso real da sacola */
+  quoteShipping: (cartId: string, cep: string) =>
+    apiFetch<ShippingQuoteResult>(`/carts/${cartId}/shipping/quote`, { method: 'POST', body: { cep } }),
+
+  /** Escolhe o frete; a API recota e grava o preço da transportadora */
+  selectShipping: (cartId: string, cep: string, serviceCode: string) =>
+    apiFetch<Cart>(`/carts/${cartId}/shipping`, { method: 'PUT', body: { cep, serviceCode } }),
 
   /** Checkout: etapa "Identificação" concluída (a loja passa a acompanhar onde a cliente parou) */
   saveCheckoutCustomer: (cartId: string, customer: CheckoutCustomer) =>

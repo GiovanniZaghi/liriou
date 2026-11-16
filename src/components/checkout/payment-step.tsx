@@ -1,8 +1,8 @@
 'use client'
 
-import { CheckCircle2, CreditCard, Loader2 } from 'lucide-react'
+import { CheckCircle2, Loader2, PartyPopper } from 'lucide-react'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ApiError } from '@/lib/api/http'
 import { ordersApi } from '@/lib/api/orders'
 import type { Order } from '@/lib/api/types'
@@ -11,8 +11,9 @@ import { useStore } from '../loja/store-provider'
 import { btnPrimary } from '../loja/styles'
 import { CheckoutSteps } from './checkout-steps'
 import { OrderSummary } from './order-summary'
+import { PaymentMethods } from './payment-methods'
 
-/** Etapa 4 do checkout. O gateway de pagamento entra em <PaymentMethods />. */
+/** Etapa 4 do checkout: pagamento pelo Mercado Pago (Pix, cartão ou boleto) e confirmação. */
 export function PaymentStep({ orderId }: { orderId: string }) {
   const { settings } = useStore()
   const [order, setOrder] = useState<Order | null>(null)
@@ -24,6 +25,11 @@ export function PaymentStep({ orderId }: { orderId: string }) {
       .then(setOrder)
       .catch((err) => setError(err instanceof ApiError && err.status === 404 ? 'Pedido não encontrado.' : err.message))
   }, [orderId])
+
+  const handlePaid = useCallback(() => {
+    setOrder((o) => (o ? { ...o, status: 'pago' } : o))
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [])
 
   if (error) {
     return (
@@ -45,6 +51,7 @@ export function PaymentStep({ orderId }: { orderId: string }) {
   }
 
   const a = order.shippingAddress
+  const paid = order.status === 'pago'
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
@@ -52,23 +59,43 @@ export function PaymentStep({ orderId }: { orderId: string }) {
 
       <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="space-y-6">
-          <section className="flex items-start gap-4 rounded-3xl border border-folha/30 bg-folha/10 p-6">
-            <CheckCircle2 className="mt-0.5 size-6 shrink-0 text-folha" aria-hidden />
-            <div>
-              <h1 className="font-serif text-2xl text-grafite">Pedido #{order.number} criado</h1>
-              <p className="mt-1 text-xs leading-relaxed text-noite-900">
-                Seu pedido foi registrado. Conclua o pagamento abaixo para confirmarmos o envio.
+          {paid ? (
+            <section className="rounded-3xl border border-folha/30 bg-folha/10 p-8 text-center">
+              <PartyPopper className="mx-auto mb-3 size-10 text-folha" aria-hidden />
+              <h1 className="font-serif text-3xl text-grafite">Pagamento aprovado!</h1>
+              <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-noite-900">
+                Seu pedido #{order.number} está confirmado e já vamos preparar o envio com todo carinho. 🌸
               </p>
-            </div>
-          </section>
+              <Link href="/" className={`${btnPrimary} mt-6`}>
+                Continuar comprando
+              </Link>
+            </section>
+          ) : order.status === 'cancelado' ? (
+            <section className="rounded-3xl border border-rubor/30 bg-rubor/5 p-6">
+              <h1 className="font-serif text-2xl text-grafite">Pedido #{order.number} cancelado</h1>
+              <p className="mt-1 text-xs text-noite-900">Este pedido não pode mais ser pago. Fale com a gente pelo Instagram @lirio.u.</p>
+            </section>
+          ) : (
+            <>
+              <section className="flex items-start gap-4 rounded-3xl border border-folha/30 bg-folha/10 p-6">
+                <CheckCircle2 className="mt-0.5 size-6 shrink-0 text-folha" aria-hidden />
+                <div>
+                  <h1 className="font-serif text-2xl text-grafite">Pedido #{order.number} criado</h1>
+                  <p className="mt-1 text-xs leading-relaxed text-noite-900">
+                    Seu pedido foi registrado. Conclua o pagamento abaixo para confirmarmos o envio.
+                  </p>
+                </div>
+              </section>
 
-          <section className="rounded-3xl border border-borda bg-white p-6 shadow-sm sm:p-8">
-            <header className="mb-6 flex items-center justify-between">
-              <h2 className="font-serif text-2xl text-grafite">Pagamento</h2>
-              <span className="font-serif text-xl text-grafite">{formatBRL(order.totals.total)}</span>
-            </header>
-            <PaymentMethods order={order} />
-          </section>
+              <section className="rounded-3xl border border-borda bg-white p-6 shadow-sm sm:p-8">
+                <header className="mb-6 flex items-center justify-between">
+                  <h2 className="font-serif text-2xl text-grafite">Pagamento</h2>
+                  <span className="font-serif text-xl text-grafite">{formatBRL(order.totals.total)}</span>
+                </header>
+                <PaymentMethods order={order} settings={settings} onPaid={handlePaid} />
+              </section>
+            </>
+          )}
 
           <section className="grid gap-4 rounded-3xl border border-borda bg-white p-6 text-xs leading-relaxed text-cinza shadow-sm sm:grid-cols-2 sm:p-8">
             <div>
@@ -102,22 +129,6 @@ export function PaymentStep({ orderId }: { orderId: string }) {
           installments={settings.installments}
         />
       </div>
-    </div>
-  )
-}
-
-/**
- * Ponto de integração do gateway de pagamento.
- * Recebe o pedido (id, número, total, compradora) já criado como "aguardando_pagamento".
- */
-function PaymentMethods({ order }: { order: Order }) {
-  return (
-    <div className="flex flex-col items-center rounded-2xl border border-dashed border-borda bg-areia px-6 py-10 text-center">
-      <CreditCard className="mb-3 size-8 text-cinza/60" aria-hidden />
-      <p className="text-sm font-medium text-grafite">Pagamento em configuração</p>
-      <p className="mt-1 max-w-sm text-xs text-cinza">
-        Pedido #{order.number} reservado no valor de {formatBRL(order.totals.total)}.
-      </p>
     </div>
   )
 }

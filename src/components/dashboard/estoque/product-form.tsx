@@ -46,6 +46,10 @@ export function ProductForm({ product, installments }: ProductFormProps) {
     kitNote: product?.kit?.note ?? '',
     minStock: String(product?.minStock ?? 5),
     sortOrder: String(product?.sortOrder ?? 0),
+    weightGrams: String(product?.weightGrams ?? 100),
+    lengthCm: String(product?.lengthCm ?? 16),
+    widthCm: String(product?.widthCm ?? 11),
+    heightCm: String(product?.heightCm ?? 4),
     initialStock: '0',
     isActive: product?.isActive ?? true,
   })
@@ -105,6 +109,23 @@ export function ProductForm({ product, installments }: ProductFormProps) {
               </div>
             )}
           </div>
+        </Card>
+
+        <Card title="Envio">
+          <p className="-mt-2 text-[13px] text-musgo">
+            Peso e medidas do produto já embalado. A Frenet usa esses dados para calcular o frete e gerar a etiqueta.
+          </p>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <Input label="Peso (g)" name="weightGrams" type="number" min={1} value={v.weightGrams} error={err('weightGrams')}
+              required onChange={(x) => set('weightGrams', x)} />
+            <Input label="Comprimento (cm)" name="lengthCm" type="number" min={1} value={v.lengthCm} error={err('lengthCm')}
+              required onChange={(x) => set('lengthCm', x)} />
+            <Input label="Largura (cm)" name="widthCm" type="number" min={1} value={v.widthCm} error={err('widthCm')}
+              required onChange={(x) => set('widthCm', x)} />
+            <Input label="Altura (cm)" name="heightCm" type="number" min={1} value={v.heightCm} error={err('heightCm')}
+              required onChange={(x) => set('heightCm', x)} />
+          </div>
+          <p className="text-[12px] text-musgo">Dica: os Correios aceitam caixas a partir de 16 × 11 × 2 cm.</p>
         </Card>
 
         <Card title="Aparência na vitrine">

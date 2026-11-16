@@ -47,7 +47,8 @@ interface StoreContextValue {
   /** null = aplicado; texto = motivo da recusa */
   applyCoupon: (code: string) => Promise<string | null>
   removeCoupon: () => void
-  setShippingId: (optionId: string) => void
+  /** Escolhe o frete cotado. null = ok; texto = motivo da falha */
+  selectShipping: (cep: string, serviceCode: string) => Promise<string | null>
   /** A sacola virou pedido (ou sumiu no servidor): esquece a sacola local */
   clearCart: () => void
 }
@@ -202,8 +203,15 @@ export function StoreProvider({ products, settings, children }: StoreProviderPro
     removeCoupon() {
       void mutate((id) => cartApi.removeCoupon(id))
     },
-    setShippingId(optionId) {
-      void mutate((id) => cartApi.selectShipping(id, optionId))
+    async selectShipping(cep, serviceCode) {
+      let reason = 'Não foi possível escolher este frete.'
+      const ok = await mutate(
+        (id) => cartApi.selectShipping(id, cep, serviceCode),
+        (err) => {
+          if (err instanceof ApiError) reason = Object.values(err.fields ?? {})[0] ?? err.message
+        },
+      )
+      return ok ? null : reason
     },
     clearCart() {
       commit(null)

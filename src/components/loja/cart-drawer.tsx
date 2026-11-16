@@ -8,6 +8,7 @@ import { formatBRL } from '@/lib/format'
 import { maskCep } from '@/lib/masks'
 import { cn } from '@/lib/utils'
 import { Dialog } from './dialog'
+import { ShippingQuotePicker } from './shipping-quote-picker'
 import { useStore } from './store-provider'
 
 const fieldSm =
@@ -23,8 +24,10 @@ export function CartDrawer() {
 
   const [couponInput, setCouponInput] = useState(cart?.coupon?.code ?? '')
   const [applyingCoupon, setApplyingCoupon] = useState(false)
-  const [cep, setCep] = useState('')
-  const [showShipping, setShowShipping] = useState(Boolean(cart?.shippingOptionId))
+  // Volta com o CEP do frete já escolhido (a gaveta reabre mostrando a opção marcada)
+  const savedCep = cart?.shipping?.cep ? maskCep(cart.shipping.cep) : ''
+  const [cep, setCep] = useState(savedCep)
+  const [quotedCep, setQuotedCep] = useState(savedCep)
 
   const threshold = settings.freeShippingThreshold
   const freeShipping = totals?.freeShipping ?? false
@@ -47,7 +50,7 @@ export function CartDrawer() {
       toast.error('Digite um CEP válido.')
       return
     }
-    setShowShipping(true)
+    setQuotedCep(cep)
   }
 
   function checkout() {
@@ -159,13 +162,16 @@ export function CartDrawer() {
           </form>
         )}
 
-        {settings.shippingOptions.length > 0 && (
+        {items.length > 0 && (
           <div className="space-y-2">
             <p className="text-xs font-semibold tracking-wider text-grafite uppercase">Simular envio e entrega</p>
             <form onSubmit={calculateShipping} className="flex gap-2">
               <input
                 value={cep}
-                onChange={(e) => setCep(maskCep(e.target.value))}
+                onChange={(e) => {
+                  setCep(maskCep(e.target.value))
+                  setQuotedCep('')
+                }}
                 placeholder="00000-000"
                 inputMode="numeric"
                 autoComplete="postal-code"
@@ -176,29 +182,7 @@ export function CartDrawer() {
                 Calcular
               </button>
             </form>
-            {showShipping && (
-              <fieldset className="mt-2 space-y-2 text-xs">
-                <legend className="sr-only">Opções de envio</legend>
-                {settings.shippingOptions.map((opt) => (
-                  <label
-                    key={opt.id}
-                    className="flex items-center justify-between gap-3 rounded-xl border border-borda bg-areia p-2.5 hover:border-salvia has-checked:border-salvia"
-                  >
-                    <span className="flex items-center gap-2">
-                      <input
-                        type="radio"
-                        name="shipping"
-                        checked={cart?.shippingOptionId === opt.id}
-                        onChange={() => store.setShippingId(opt.id)}
-                        className="accent-salvia"
-                      />
-                      {opt.label}
-                    </span>
-                    <span className="font-semibold whitespace-nowrap">{freeShipping ? 'Grátis' : formatBRL(opt.price)}</span>
-                  </label>
-                ))}
-              </fieldset>
-            )}
+            {quotedCep && <ShippingQuotePicker cep={quotedCep} size="sm" />}
           </div>
         )}
       </div>
@@ -206,7 +190,7 @@ export function CartDrawer() {
       <div className="space-y-3 border-t border-borda bg-white p-6">
         <Row label="Subtotal" value={formatBRL(subtotal)} />
         <Row
-          label="Envio"
+          label={cart?.shipping ? `Envio (${cart.shipping.label})` : 'Envio'}
           value={totals?.shipping == null ? 'A calcular' : totals.shipping === 0 ? 'Grátis' : formatBRL(totals.shipping)}
         />
         {(totals?.discount ?? 0) > 0 && (
