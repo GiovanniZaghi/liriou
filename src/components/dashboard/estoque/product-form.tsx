@@ -7,6 +7,7 @@ import type { AdminProduct, ProductCategory } from '@/lib/api/types'
 import { CATEGORY_OPTIONS, formatPriceInput, parsePrice, slugify } from '@/lib/products'
 import { cn } from '@/lib/utils'
 import { dashBtn } from '../page-header'
+import { GalleryField, ImageField } from './image-fields'
 import { VitrinePreview } from './vitrine-preview'
 
 interface ProductFormProps {
@@ -39,7 +40,7 @@ export function ProductForm({ product, installments }: ProductFormProps) {
     badge: product?.badge ?? '',
     imageUrl: product?.imageUrl ?? '',
     hoverImageUrl: product?.hoverImageUrl ?? '',
-    gallery: product?.gallery.join('\n') ?? '',
+    gallery: product?.gallery ?? [],
     kitTag: product?.kit?.tag ?? '',
     kitContents: product?.kit?.contents ?? '',
     kitPerks: product?.kit?.perks.join('\n') ?? '',
@@ -149,11 +150,13 @@ export function ProductForm({ product, installments }: ProductFormProps) {
             <Input label="Ordem na vitrine" name="sortOrder" type="number" value={v.sortOrder} error={err('sortOrder')}
               hint="Menor aparece primeiro" onChange={(x) => set('sortOrder', x)} />
           </div>
-          <Input label="Foto principal (URL)" name="imageUrl" type="url" value={v.imageUrl} error={err('imageUrl')} required
-            placeholder="https://…" onChange={(x) => set('imageUrl', x)} />
-          <Input label="Foto ao passar o mouse (URL)" name="hoverImageUrl" type="url" value={v.hoverImageUrl}
-            error={err('hoverImageUrl')} placeholder="Opcional — ex.: foto de uso real" onChange={(x) => set('hoverImageUrl', x)} />
-          <Textarea label="Galeria (uma URL por linha)" name="gallery" value={v.gallery} error={err('gallery')} rows={3}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <ImageField label="Foto principal" name="imageUrl" value={v.imageUrl} error={err('imageUrl')} required
+              onChange={(x) => set('imageUrl', x)} />
+            <ImageField label="Foto ao passar o mouse" name="hoverImageUrl" value={v.hoverImageUrl}
+              error={err('hoverImageUrl')} hint="Opcional, ex.: foto de uso real." onChange={(x) => set('hoverImageUrl', x)} />
+          </div>
+          <GalleryField label="Galeria" name="gallery" value={v.gallery} error={err('gallery')}
             hint="Fotos extras no detalhe do produto." onChange={(x) => set('gallery', x)} />
         </Card>
 

@@ -77,6 +77,13 @@ export const registerStockMovement = (id: string, body: { type: StockMovementTyp
     body,
   })
 
+/** Foto enviada pelo dashboard; `url` é o link público que vai no produto. */
+export const uploadImage = (file: File) => {
+  const body = new FormData()
+  body.append('file', file)
+  return adminFetch<{ id: string; url: string }>('/admin/images', { method: 'POST', body })
+}
+
 /** CSV bruto (repassado como download pelo route handler /dashboard/export). */
 export async function exportLeadsCsv({ q, pain }: LeadFilters): Promise<Response> {
   const token = await getSessionToken()

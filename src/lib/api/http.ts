@@ -31,17 +31,19 @@ export type ApiInit = Omit<RequestInit, 'body'> & {
 }
 
 export async function apiFetch<T>(path: string, { body, token, headers, ...init }: ApiInit = {}): Promise<T> {
+  // FormData (upload) vai como multipart: o fetch define o Content-Type com o boundary
+  const isForm = body instanceof FormData
   let res: Response
   try {
     res = await fetch(`${baseUrl()}${path}`, {
       ...init,
       headers: {
         Accept: 'application/json',
-        ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+        ...(body !== undefined && !isForm ? { 'Content-Type': 'application/json' } : {}),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...headers,
       },
-      body: body !== undefined ? JSON.stringify(body) : undefined,
+      body: isForm ? body : body !== undefined ? JSON.stringify(body) : undefined,
     })
   } catch {
     throw new ApiError(0, 'NETWORK_ERROR', 'Não foi possível conectar. Verifique sua internet e tente de novo.')
