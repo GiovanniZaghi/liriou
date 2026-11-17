@@ -12,7 +12,6 @@ const UUID_RE = /^[0-9a-f-]{36}$/i
 /** Gera a etiqueta (intent=create) ou renova os links (intent=refresh). Id via campo oculto, sem .bind. */
 export async function shipmentAction(_prev: ShipmentActionState, fd: FormData): Promise<ShipmentActionState> {
   const orderId = String(fd.get('orderId') ?? '')
-  const cartId = String(fd.get('cartId') ?? '')
   if (!UUID_RE.test(orderId)) return { error: 'Pedido inválido.' }
 
   try {
@@ -25,6 +24,7 @@ export async function shipmentAction(_prev: ShipmentActionState, fd: FormData): 
     return { error: 'Não foi possível falar com a Frenet agora. Tente de novo.' }
   }
 
-  if (UUID_RE.test(cartId)) revalidatePath(`/dashboard/clientes/${cartId}`)
+  revalidatePath(`/dashboard/pedidos/${orderId}`)
+  revalidatePath('/dashboard/pedidos')
   return { ok: true }
 }

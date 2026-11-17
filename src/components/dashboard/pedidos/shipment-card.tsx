@@ -5,27 +5,11 @@ import { useActionState } from 'react'
 import { shipmentAction, type ShipmentActionState } from '@/app/actions/shipments'
 import type { ShipmentInfo } from '@/lib/api/types'
 import { formatBRL } from '@/lib/format'
+import { shipmentStatusLabel } from '@/lib/orders'
 import { dashBtn } from '../page-header'
 
-/** Rótulos dos status de envio da Frenet */
-const STATUS_LABEL: Record<string, string> = {
-  '1': 'Criado',
-  Criado: 'Criado',
-  '2': 'Aguardando pagamento',
-  PendentePagamento: 'Aguardando pagamento',
-  '3': 'Falha no pagamento',
-  FalhaPagamento: 'Falha no pagamento',
-  '4': 'Etiqueta paga',
-  SucessoPagamento: 'Etiqueta paga',
-  '5': 'Postado',
-  Postado: 'Postado',
-  '7': 'Cancelado',
-  Cancelado: 'Cancelado',
-  '18': 'No ponto de postagem',
-}
-
 /** Envio do pedido: frete escolhido, etiqueta Frenet e último evento de rastreio. */
-export function ShipmentCard({ info, cartId }: { info: ShipmentInfo; cartId: string }) {
+export function ShipmentCard({ info }: { info: ShipmentInfo }) {
   const [state, action, pending] = useActionState<ShipmentActionState, FormData>(shipmentAction, {})
   const { shipping: s, shipment } = info
 
@@ -63,7 +47,7 @@ export function ShipmentCard({ info, cartId }: { info: ShipmentInfo; cartId: str
           <p className="flex items-center justify-between gap-2">
             <span className="text-musgo">Etiqueta</span>
             <span className="rounded-full bg-folha/12 px-2.5 py-0.5 text-[12px] font-medium text-folha">
-              {STATUS_LABEL[shipment.status] ?? shipment.status}
+              {shipmentStatusLabel(shipment.status)}
             </span>
           </p>
           {shipment.trackingNumber && (
@@ -100,7 +84,6 @@ export function ShipmentCard({ info, cartId }: { info: ShipmentInfo; cartId: str
             )}
             <form action={action}>
               <input type="hidden" name="orderId" value={info.orderId} />
-              <input type="hidden" name="cartId" value={cartId} />
               <input type="hidden" name="intent" value="refresh" />
               <button type="submit" disabled={pending} className={`${dashBtn.outline} w-full`}>
                 {pending ? <Loader2 className="size-4 animate-spin" aria-hidden /> : <RefreshCw className="size-4" aria-hidden />}
@@ -123,7 +106,6 @@ export function ShipmentCard({ info, cartId }: { info: ShipmentInfo; cartId: str
           )}
           <form action={action}>
             <input type="hidden" name="orderId" value={info.orderId} />
-            <input type="hidden" name="cartId" value={cartId} />
             <input type="hidden" name="intent" value="create" />
             <button type="submit" disabled={!info.canCreate || pending} className={`${dashBtn.primary} w-full`}>
               {pending ? <Loader2 className="size-4 animate-spin" aria-hidden /> : <Tag className="size-4" aria-hidden />}

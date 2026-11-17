@@ -2,10 +2,13 @@
 
 import { useEffect } from 'react'
 
-/** Liga os elementos `[data-reveal]` da página: entram ao aparecer na tela, uma única vez. */
+/**
+ * Liga os elementos `[data-reveal]`: entram ao aparecer na tela, uma única vez.
+ * Também observa o que surge depois (navegação entre páginas, filtros e paginação da vitrine),
+ * senão esses elementos ficariam invisíveis.
+ */
 export function RevealObserver() {
   useEffect(() => {
-    const els = document.querySelectorAll<HTMLElement>('[data-reveal]')
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
@@ -16,8 +19,21 @@ export function RevealObserver() {
       },
       { rootMargin: '0px 0px -10% 0px' },
     )
-    els.forEach((el) => io.observe(el))
-    return () => io.disconnect()
+    const watch = (root: ParentNode) => {
+      if (root instanceof HTMLElement && root.matches('[data-reveal]:not(.is-visible)')) io.observe(root)
+      root.querySelectorAll<HTMLElement>('[data-reveal]:not(.is-visible)').forEach((el) => io.observe(el))
+    }
+
+    watch(document)
+    const mo = new MutationObserver((mutations) => {
+      for (const m of mutations) m.addedNodes.forEach((n) => n instanceof HTMLElement && watch(n))
+    })
+    mo.observe(document.body, { childList: true, subtree: true })
+
+    return () => {
+      mo.disconnect()
+      io.disconnect()
+    }
   }, [])
 
   return null

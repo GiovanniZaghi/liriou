@@ -35,7 +35,7 @@ export function PaymentStep({ orderId }: { orderId: string }) {
     return (
       <div className="mx-auto max-w-md px-4 py-24 text-center">
         <h1 className="font-serif text-2xl text-grafite">{error}</h1>
-        <Link href="/#colecao" className={`${btnPrimary} mt-6`}>
+        <Link href="/vitrine" className={`${btnPrimary} mt-6`}>
           Voltar à loja
         </Link>
       </div>

@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import type { CheckoutStage, JourneyFunnel as Funnel } from '@/lib/api/types'
 import { formatBRL, formatNumber } from '@/lib/format'
 import { cn } from '@/lib/utils'
@@ -10,8 +9,8 @@ const STEPS: { stage: CheckoutStage; label: string; hint: string }[] = [
   { stage: 'ordered', label: 'Pedidos realizados', hint: 'concluíram o checkout' },
 ]
 
-/** Funil do checkout: cada etapa é um filtro da lista abaixo. */
-export function JourneyFunnel({ funnel, active }: { funnel: Funnel; active?: CheckoutStage }) {
+/** Funil do checkout: quantas sessões de compra chegaram até cada etapa. */
+export function JourneyFunnel({ funnel }: { funnel: Funnel }) {
   const total = funnel.cart + funnel.identified + funnel.delivery + funnel.ordered
   const conversion = total ? Math.round((funnel.ordered / total) * 100) : 0
 
@@ -29,7 +28,7 @@ export function JourneyFunnel({ funnel, active }: { funnel: Funnel; active?: Che
           <p className="text-[14px] text-musgo">Em sacolas não finalizadas</p>
           <p className="mt-2 text-[40px] leading-none font-semibold text-rubor">{formatBRL(funnel.openValue)}</p>
           <p className="mt-2 text-[13px] text-musgo">
-            {formatNumber(funnel.cart + funnel.identified + funnel.delivery)} clientes não concluíram a compra
+            {formatNumber(funnel.cart + funnel.identified + funnel.delivery)} sacolas não viraram pedido
           </p>
         </div>
       </div>
@@ -37,17 +36,8 @@ export function JourneyFunnel({ funnel, active }: { funnel: Funnel; active?: Che
       <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {STEPS.map(({ stage, label, hint }, i) => {
           const count = funnel[stage]
-          const isActive = active === stage
           return (
-            <li key={stage}>
-              <Link
-                href={isActive ? '/dashboard/clientes' : `/dashboard/clientes?etapa=${stage}`}
-                aria-current={isActive ? 'true' : undefined}
-                className={cn(
-                  'block h-full rounded-[20px] border bg-white p-5 transition-colors hover:border-noite-900',
-                  isActive ? 'border-noite-900 ring-1 ring-noite-900' : 'border-linho',
-                )}
-              >
+            <li key={stage} className="h-full rounded-[20px] border border-linho bg-white p-5">
                 <p className="text-[12px] font-semibold tracking-[0.08em] text-musgo uppercase">
                   {i + 1}. {label}
                 </p>
@@ -55,7 +45,6 @@ export function JourneyFunnel({ funnel, active }: { funnel: Funnel; active?: Che
                   {formatNumber(count)}
                 </p>
                 <p className="mt-2 text-[12px] leading-snug text-musgo">{hint}</p>
-              </Link>
             </li>
           )
         })}

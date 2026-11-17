@@ -23,7 +23,7 @@ export default async function CheckoutLayout({ children }: { children: React.Rea
       <StoreProvider products={products} settings={settings}>
         <header className="border-b border-borda bg-white">
           <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-            <Link href="/#colecao" className="flex items-center gap-1.5 text-xs font-medium text-cinza hover:text-grafite">
+            <Link href="/vitrine" className="flex items-center gap-1.5 text-xs font-medium text-cinza hover:text-grafite">
               <ArrowLeft className="size-4" aria-hidden /> <span className="hidden sm:inline">Voltar à loja</span>
             </Link>
             <Wordmark />

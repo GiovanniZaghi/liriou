@@ -1,11 +1,19 @@
+import { ArrowRight } from 'lucide-react'
+import Link from 'next/link'
 import type { CatalogProduct } from '@/lib/api/types'
 import { KIT_TAG_TONES, KitCardView } from './product-card-view'
 import { ProductCard } from './product-card'
 import { SectionTitle } from './section-title'
-import { btnSmall, sectionPad } from './styles'
+import { btnOutline, btnSmall, sectionPad } from './styles'
 import { AddToCartButton } from './triggers'
 
+/** Destaques na home: os primeiros da ordem do dashboard. A coleção inteira fica em /vitrine. */
+const HOME_HIGHLIGHTS = 8
+
 export function Collection({ products }: { products: CatalogProduct[] }) {
+  // Esgotados não ocupam vaga de destaque (se houver disponíveis suficientes)
+  const highlights = [...products].sort((a, b) => Number(b.inStock) - Number(a.inStock)).slice(0, HOME_HIGHLIGHTS)
+
   return (
     <section id="colecao" aria-labelledby="colecao-titulo" className={`mx-auto max-w-7xl scroll-mt-20 ${sectionPad}`}>
       <SectionTitle
@@ -19,11 +27,20 @@ export function Collection({ products }: { products: CatalogProduct[] }) {
           Nossa vitrine está sendo preparada. Volte em instantes 🤎
         </p>
       ) : (
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {products.map((p, i) => (
-            <ProductCard key={p.id} product={p} index={i} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {highlights.map((p, i) => (
+              <ProductCard key={p.id} product={p} index={i % 4} />
+            ))}
+          </div>
+          <div data-reveal className="mt-12 text-center">
+            <Link href="/vitrine" className={btnOutline}>
+              Ver toda a vitrine
+              {products.length > highlights.length && <span className="text-cinza">({products.length} produtos)</span>}
+              <ArrowRight className="size-4" aria-hidden />
+            </Link>
+          </div>
+        </>
       )}
     </section>
   )

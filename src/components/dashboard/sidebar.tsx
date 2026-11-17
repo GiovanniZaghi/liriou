@@ -1,6 +1,6 @@
 'use client'
 
-import { ExternalLink, LogOut, Menu, Package, TicketPercent, UserRound, Users, X } from 'lucide-react'
+import { ExternalLink, LogOut, Menu, Package, ShoppingBag, TicketPercent, UserRound, Users, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -13,10 +13,11 @@ const NAV_SECTIONS = [
   {
     title: 'Dashboard',
     items: [
-      { href: '/dashboard/pre-venda', label: 'Pré-venda', icon: Users },
+      { href: '/dashboard/pedidos', label: 'Pedidos', icon: ShoppingBag },
       { href: '/dashboard/clientes', label: 'Clientes', icon: UserRound },
       { href: '/dashboard/estoque', label: 'Estoque', icon: Package },
       { href: '/dashboard/cupons', label: 'Cupons', icon: TicketPercent },
+      { href: '/dashboard/pre-venda', label: 'Pré-venda', icon: Users },
     ],
   },
 ]

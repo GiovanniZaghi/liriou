@@ -8,10 +8,14 @@ import type {
   AdminProduct,
   CouponPayload,
   InventorySummary,
-  JourneyDetail,
-  JourneyFilters,
+  AdminOrderDetail,
+  AdminOrderRow,
+  CustomerDetail,
+  CustomerFilters,
+  CustomerRow,
   JourneyFunnel,
-  JourneyRow,
+  OrderFilters,
+  OrdersSummary,
   Lead,
   LeadFilters,
   LeadStats,
@@ -96,14 +100,27 @@ export async function exportLeadsCsv({ q, pain }: LeadFilters): Promise<Response
 
 // ─── Clientes ─────────────────────────────────────────────────────────────────
 
-export const JOURNEYS_PAGE_SIZE = 30
+export const CUSTOMERS_PAGE_SIZE = 30
 
 export const getJourneyFunnel = () => adminFetch<JourneyFunnel>('/admin/customers/funnel')
 
-export const listJourneys = ({ q, stage, page = 1 }: JourneyFilters) =>
-  adminFetch<Paginated<JourneyRow>>(`/admin/customers${toQuery({ q, stage, page, pageSize: JOURNEYS_PAGE_SIZE })}`)
+export const listCustomers = ({ q, segment, page = 1 }: CustomerFilters) =>
+  adminFetch<Paginated<CustomerRow>>(`/admin/customers${toQuery({ q, segment, page, pageSize: CUSTOMERS_PAGE_SIZE })}`)
 
-export const getJourney = (cartId: string) => adminFetch<JourneyDetail>(`/admin/customers/${cartId}`)
+export const getCustomer = (email: string) => adminFetch<CustomerDetail>(`/admin/customers/detail${toQuery({ email })}`)
+
+// ─── Pedidos ──────────────────────────────────────────────────────────────────
+
+export const ORDERS_PAGE_SIZE = 30
+
+export const getOrdersSummary = () => adminFetch<OrdersSummary>('/admin/orders/summary')
+
+export const listOrders = ({ q, status, toShip, page = 1 }: OrderFilters) =>
+  adminFetch<Paginated<AdminOrderRow>>(
+    `/admin/orders${toQuery({ q, status, toShip: toShip || undefined, page, pageSize: ORDERS_PAGE_SIZE })}`,
+  )
+
+export const getOrder = (id: string) => adminFetch<AdminOrderDetail>(`/admin/orders/${id}`)
 
 // ─── Envios (Frenet) ──────────────────────────────────────────────────────────
 

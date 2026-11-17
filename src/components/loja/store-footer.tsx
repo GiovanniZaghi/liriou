@@ -42,7 +42,7 @@ export function StoreFooter() {
         </div>
 
         <nav aria-label="Rodapé" className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm">
-          <Link href="/#colecao" className={link}>
+          <Link href="/vitrine" className={link}>
             Vitrine
           </Link>
           <DialogTrigger dialog={{ type: 'creator' }} className={link}>

@@ -329,27 +329,94 @@ export interface StartPaymentInput {
 /** Até onde a cliente chegou: sacola → identificação → entrega/revisão → pedido */
 export type CheckoutStage = 'cart' | 'identified' | 'delivery' | 'ordered'
 
-export interface JourneyRow {
-  cartId: string
-  stage: CheckoutStage
-  customer: { name: string; email: string; cpf: string; phone: string } | null
+// ─── Clientes (dashboard): uma por e-mail ─────────────────────────────────────
+
+export type CustomerSegment = 'buyers' | 'not_bought'
+
+export interface CustomerRow {
+  email: string
+  name: string
+  phone: string
   city: string | null
   state: string | null
-  itemCount: number
-  value: number
-  order: { id: string; number: number; status: OrderStatus; total: number } | null
-  createdAt: string
+  /** Pedidos não cancelados */
+  ordersCount: number
+  paidOrdersCount: number
+  /** Soma dos pedidos pagos */
+  totalSpent: number
+  lastOrderAt: string | null
+  /** Sacolas com itens que não viraram pedido */
+  openCartsCount: number
+  openCartsValue: number
+  firstSeenAt: string
   lastActivityAt: string
 }
 
-export interface JourneyDetail extends JourneyRow {
-  shippingAddress: Order['shippingAddress'] | null
-  shippingOption: string | null
+export interface CustomerDetail extends CustomerRow {
+  cpf: string | null
+  address: Order['shippingAddress'] | null
+  orders: { id: string; number: number; status: OrderStatus; itemCount: number; total: number; shipmentStatus: string | null; createdAt: string }[]
+  openCarts: {
+    cartId: string
+    stage: CheckoutStage
+    itemCount: number
+    value: number
+    items: { name: string; quantity: number; image: string }[]
+    lastActivityAt: string
+  }[]
+}
+
+export interface CustomerFilters {
+  q?: string
+  segment?: CustomerSegment
+  page?: number
+}
+
+// ─── Pedidos (dashboard) ──────────────────────────────────────────────────────
+
+export interface AdminOrderRow {
+  id: string
+  number: number
+  status: OrderStatus
+  customer: { name: string; email: string; phone: string }
+  city: string
+  state: string
+  itemCount: number
+  total: number
+  /** Tentativa de pagamento mais recente */
+  payment: { method: PaymentMethod; status: PaymentStatus; installments: number } | null
+  shipment: { status: string; trackingNumber: string | null } | null
+  createdAt: string
+}
+
+export interface AdminOrderDetail extends AdminOrderRow {
+  customer: AdminOrderRow['customer'] & { cpf: string }
+  shippingAddress: Order['shippingAddress']
+  shippingLabel: string
   couponCode: string | null
   items: { productId: string; name: string; sku: string; image: string; unitPrice: number; quantity: number; lineTotal: number }[]
-  totals: { subtotal: number; discount: number; shipping: number | null; total: number }
-  timeline: { createdAt: string; identifiedAt: string | null; deliveryAt: string | null; orderedAt: string | null }
-  otherSessions: { cartId: string; stage: CheckoutStage; value: number; order: { id: string; number: number; status: OrderStatus } | null; lastActivityAt: string }[]
+  totals: { subtotal: number; discount: number; shipping: number; total: number }
+  payments: { id: string; method: PaymentMethod; status: PaymentStatus; statusDetail: string; amount: number; installments: number; createdAt: string }[]
+  updatedAt: string
+}
+
+export interface OrdersSummary {
+  total: number
+  awaitingPayment: number
+  paid: number
+  cancelled: number
+  /** Pagos sem etiqueta de envio */
+  toShip: number
+  paidValue: number
+  awaitingValue: number
+  today: number
+}
+
+export interface OrderFilters {
+  q?: string
+  status?: OrderStatus
+  toShip?: boolean
+  page?: number
 }
 
 export interface JourneyFunnel {
@@ -359,12 +426,6 @@ export interface JourneyFunnel {
   ordered: number
   orderedValue: number
   openValue: number
-}
-
-export interface JourneyFilters {
-  q?: string
-  stage?: CheckoutStage
-  page?: number
 }
 
 // ─── Cupons (dashboard) ───────────────────────────────────────────────────────

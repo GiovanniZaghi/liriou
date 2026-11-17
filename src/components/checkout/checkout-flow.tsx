@@ -82,7 +82,7 @@ export function CheckoutFlow() {
         <ShoppingBag className="mx-auto mb-4 size-10 text-cinza/50" aria-hidden />
         <h1 className="font-serif text-2xl text-grafite">Sua sacola está vazia</h1>
         <p className="mt-2 text-sm text-cinza">Escolha seus favoritos na vitrine para finalizar a compra.</p>
-        <Link href="/#colecao" className={`${btnPrimary} mt-6`}>
+        <Link href="/vitrine" className={`${btnPrimary} mt-6`}>
           Ir para a vitrine
         </Link>
       </div>

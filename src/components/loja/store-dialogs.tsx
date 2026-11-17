@@ -118,7 +118,7 @@ function SearchModal() {
         />
         <div className="mt-6 space-y-3" aria-live="polite">
           {q && results.length === 0 && <p className="text-xs text-cinza">Nenhum produto encontrado.</p>}
-          {results.map((p) => (
+          {results.slice(0, 6).map((p) => (
             <button
               key={p.id}
               type="button"
@@ -129,6 +129,15 @@ function SearchModal() {
               <span className="text-xs font-semibold text-salvia">{formatBRL(p.price)}</span>
             </button>
           ))}
+          {q && (
+            <Link
+              href={`/vitrine?q=${encodeURIComponent(query.trim())}`}
+              onClick={closeDialog}
+              className="block pt-2 text-center text-xs font-semibold text-salvia hover:underline"
+            >
+              {results.length > 6 ? `Ver os ${results.length} resultados na vitrine` : 'Buscar na vitrine completa'}
+            </Link>
+          )}
         </div>
       </div>
     </Dialog>

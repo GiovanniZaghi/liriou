@@ -12,7 +12,7 @@ import { Wordmark } from './wordmark'
 const NAV = [
   { href: '/#home', label: 'Início' },
   { href: '/#manifesto', label: 'Manifesto' },
-  { href: '/#colecao', label: 'Vitrine' },
+  { href: '/vitrine', label: 'Vitrine' },
   { href: '/#kits', label: 'Kits High-Ticket' },
   { href: '/#ritual', label: 'O Ritual' },
 ]
