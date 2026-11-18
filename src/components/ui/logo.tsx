@@ -26,17 +26,21 @@ export function LogoPrimary({ className, animated = false }: { className?: strin
   )
 }
 
-/** Wordmark + folhas, sem SCRUNCHIES (rodapé, favicon, selo). */
-export function LogoSymbol({ className }: { className?: string }) {
+/**
+ * Wordmark + folhas, sem SCRUNCHIES (rodapé, favicon, selo).
+ * tone="light" (padrão): creme e pétala, para fundos escuros · tone="dark": verde, para fundos claros (loja).
+ */
+export function LogoSymbol({ className, tone = 'light' }: { className?: string; tone?: 'light' | 'dark' }) {
+  const suffix = tone === 'dark' ? '-escuro' : ''
   return (
     <div role="img" aria-label="Líriou" className={cn('relative h-[45.453px] w-[103.109px]', className)}>
       <div className="absolute inset-[4.75%_82.45%_30.96%_1.85%]">
         <div className="absolute inset-[-0.64%_-1.15%_-0.57%_-1.03%]">
-          <img alt="" className="block size-full max-w-none" src="/figma/simbolo-folhas.svg" />
+          <img alt="" className="block size-full max-w-none" src={`/figma/simbolo-folhas${suffix}.svg`} />
         </div>
       </div>
       <div className="absolute inset-[52.31%_16.54%_7.89%_16.87%]">
-        <img alt="" className="absolute inset-0 block size-full max-w-none" src="/figma/simbolo-wordmark.svg" />
+        <img alt="" className="absolute inset-0 block size-full max-w-none" src={`/figma/simbolo-wordmark${suffix}.svg`} />
       </div>
     </div>
   )

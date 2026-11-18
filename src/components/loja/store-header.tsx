@@ -1,46 +1,31 @@
 'use client'
 
-import { Menu, Search, ShoppingBag, Sparkles, WandSparkles, X } from 'lucide-react'
+import { Menu, Search, ShoppingBag, Sparkles, X } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
-import { formatBRL } from '@/lib/format'
-import { PRE_SALE_PATH } from '@/lib/site'
-import { WhatsAppIcon } from './brand-icons'
 import { useStore } from './store-provider'
 import { Wordmark } from './wordmark'
 
 const NAV = [
-  { href: '/#home', label: 'Início' },
-  { href: '/#manifesto', label: 'Manifesto' },
-  { href: '/vitrine', label: 'Vitrine' },
-  { href: '/#kits', label: 'Kits High-Ticket' },
-  { href: '/#ritual', label: 'O Ritual' },
+  { href: '/#manifesto', label: 'Nossa história' },
+  { href: '/vitrine', label: 'Comprar' },
+  { href: '/vitrine?categoria=kit', label: 'Kits' },
+  { href: '/#ritual', label: 'Cuidados com o cabelo' },
+  { href: '/vitrine?ordem=novidades', label: 'Novidades' },
 ]
 
 export function StoreHeader() {
-  const { openDialog, count, settings } = useStore()
+  const { openDialog, count } = useStore()
   const [menuOpen, setMenuOpen] = useState(false)
   const closeMenu = () => setMenuOpen(false)
 
   return (
     <>
-      <div className="flex items-center justify-between gap-4 overflow-hidden bg-petala px-4 py-2.5 text-xs font-semibold tracking-wider text-noite-900">
-        <div className="hidden sm:block sm:flex-1" />
-        <p className="flex flex-1 items-center justify-center gap-2 text-center">
+      <div className="bg-petala px-4 py-2.5 text-xs font-semibold tracking-wider text-noite-900">
+        <p className="flex items-center justify-center gap-2 text-center">
           <Sparkles className="size-3.5 shrink-0 text-rubor" aria-hidden />
-          <span>
-            Evento Especial 31/10 | Envio grátis em SP acima de {formatBRL(settings.freeShippingThreshold).replace(',00', '')}
-          </span>
+          Se cuide com carinho.
         </p>
-        <div className="hidden flex-1 justify-end sm:flex">
-          <button
-            type="button"
-            onClick={() => openDialog({ type: 'creator' })}
-            className="flex items-center gap-1.5 font-semibold text-rubor hover:underline"
-          >
-            <WandSparkles className="size-3.5" aria-hidden /> Seja uma Creator Líriou
-          </button>
-        </div>
       </div>
 
       <header className="sticky top-0 z-40 border-b border-borda bg-areia/90 backdrop-blur-md">
@@ -60,18 +45,12 @@ export function StoreHeader() {
             <Wordmark />
           </div>
 
-          <nav aria-label="Principal" className="hidden items-center gap-8 text-sm font-medium tracking-wide md:flex">
+          <nav aria-label="Principal" className="hidden items-center gap-6 text-sm font-medium tracking-wide md:flex lg:gap-8">
             {NAV.map((item) => (
               <Link key={item.href} href={item.href} className="text-grafite transition-colors hover:text-salvia">
                 {item.label}
               </Link>
             ))}
-            <Link
-              href={PRE_SALE_PATH}
-              className="flex items-center gap-1.5 font-semibold text-salvia transition-colors hover:text-salvia-900"
-            >
-              <WhatsAppIcon className="size-4" /> Lista VIP
-            </Link>
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-4">
@@ -114,19 +93,6 @@ export function StoreHeader() {
                   {item.label}
                 </Link>
               ))}
-              <Link href={PRE_SALE_PATH} onClick={closeMenu} className="flex items-center gap-2 font-semibold text-salvia">
-                <WhatsAppIcon className="size-4" /> Lista VIP
-              </Link>
-              <button
-                type="button"
-                onClick={() => {
-                  closeMenu()
-                  openDialog({ type: 'creator' })
-                }}
-                className="flex items-center gap-2 border-t border-borda pt-4 text-left text-sm font-semibold text-salvia-900"
-              >
-                <WandSparkles className="size-4 text-rosa" aria-hidden /> Seja uma Creator Líriou
-              </button>
             </nav>
           </div>
         )}

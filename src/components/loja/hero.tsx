@@ -1,5 +1,5 @@
-import { Feather, WandSparkles } from 'lucide-react'
-import { DialogTrigger } from './triggers'
+import { Feather } from 'lucide-react'
+import Link from 'next/link'
 
 /** Hero na cor-assinatura da marca (verde-noite + pétala), como no logo e no Instagram. */
 export function StoreHero() {
@@ -22,22 +22,22 @@ export function StoreHero() {
             <span className="text-folha-claro">.</span>
           </h1>
           <p className="mx-auto max-w-lg text-base leading-relaxed text-leite/80 sm:text-lg lg:mx-0">
-            Scrunchies e toucas de cetim de alta gramatura para dormir e acordar bonita: sem frizz, sem marca de elástico,
-            com acabamento de alfaiataria.
+            Scrunchies e toucas de cetim feitos para acompanhar seus dias, seus momentos de descanso e os pequenos cuidados
+            com você.
           </p>
           <div className="flex flex-col items-center justify-center gap-4 pt-2 sm:flex-row lg:justify-start">
-            <a
-              href="#colecao"
+            <Link
+              href="/vitrine"
               className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-petala px-8 py-4 font-semibold text-noite-900 shadow-lg transition-all hover:-translate-y-0.5 hover:bg-[#ffdbe5] sm:w-auto"
             >
-              Explorar Vitrine
-            </a>
-            <DialogTrigger
-              dialog={{ type: 'creator' }}
+              Conheça a coleção
+            </Link>
+            <a
+              href="#manifesto"
               className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-leite/30 px-8 py-4 font-medium text-leite transition-all hover:border-petala hover:text-petala sm:w-auto"
             >
-              <WandSparkles className="size-4 text-petala" aria-hidden /> Quero ser Creator
-            </DialogTrigger>
+              Nossa história
+            </a>
           </div>
         </div>
 

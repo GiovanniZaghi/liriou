@@ -24,6 +24,8 @@ export interface CatalogProduct {
   gallery: string[]
   kit: KitDetails | null
   inStock: boolean
+  /** ISO; ausente em respostas de versões antigas da API */
+  createdAt?: string
 }
 
 /** Opção de frete cotada na Frenet para um CEP */

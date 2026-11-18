@@ -5,6 +5,7 @@ export const VITRINE_PAGE_SIZE = 24
 
 export const SORT_OPTIONS = [
   { value: 'destaques', label: 'Destaques' },
+  { value: 'novidades', label: 'Novidades' },
   { value: 'menor-preco', label: 'Menor preço' },
   { value: 'maior-preco', label: 'Maior preço' },
   { value: 'a-z', label: 'Nome (A–Z)' },
@@ -65,6 +66,7 @@ export function applyVitrineFilters(products: CatalogProduct[], f: VitrineFilter
   const sorted = [...filtered]
   if (f.sort === 'menor-preco') sorted.sort((a, b) => a.price - b.price)
   if (f.sort === 'maior-preco') sorted.sort((a, b) => b.price - a.price)
+  if (f.sort === 'novidades') sorted.sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? ''))
   if (f.sort === 'a-z') sorted.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
   // Esgotados vão para o fim, mantendo a ordem escolhida entre eles
   sorted.sort((a, b) => Number(b.inStock) - Number(a.inStock))
