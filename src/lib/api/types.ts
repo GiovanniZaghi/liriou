@@ -16,6 +16,8 @@ export interface CatalogProduct {
   description: string
   category: ProductCategory
   price: number
+  /** Preço "De" (riscado). null = sem promoção */
+  compareAtPrice: number | null
   colorName: string | null
   colorHex: string | null
   badge: string | null
@@ -139,6 +141,8 @@ export interface AdminProduct {
   description: string
   category: ProductCategory
   price: number
+  /** Preço "De" (riscado). null = sem promoção */
+  compareAtPrice: number | null
   colorName: string | null
   colorHex: string | null
   badge: string | null
@@ -169,6 +173,8 @@ export interface ProductPayload {
   description: string
   category: ProductCategory
   price: number
+  /** Preço "De" (riscado). null = sem promoção */
+  compareAtPrice: number | null
   colorName: string | null
   colorHex: string | null
   badge: string | null

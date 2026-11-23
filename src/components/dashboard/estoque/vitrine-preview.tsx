@@ -37,6 +37,7 @@ export function VitrinePreview({ card, kit, installments, visible }: VitrinePrev
             <KitCardView
               name={card.name}
               price={card.price}
+              compareAtPrice={card.compareAtPrice}
               kit={kit}
               action={<span className={btnSmall}>{card.inStock ? 'Garantir Kit' : 'Esgotado'}</span>}
             />

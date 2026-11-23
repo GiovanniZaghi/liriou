@@ -2,10 +2,10 @@
 
 import { Check } from 'lucide-react'
 import { useState } from 'react'
-import { formatBRL } from '@/lib/format'
 import type { CatalogProduct } from '@/lib/api/types'
 import { cn } from '@/lib/utils'
 import { CloseButton, Dialog } from './dialog'
+import { PriceTag } from './product-card-view'
 import { useStore } from './store-provider'
 import { btnPrimary } from './styles'
 
@@ -45,7 +45,9 @@ export function ProductModal({ product }: { product: CatalogProduct }) {
           <div>
             {product.badge && <span className="eyebrow text-salvia">{product.badge}</span>}
             <h2 className="mt-1 font-serif text-3xl text-grafite">{product.name}</h2>
-            <p className="mt-2 font-serif text-2xl text-salvia">{formatBRL(product.price)}</p>
+            <div className="mt-2">
+              <PriceTag price={product.price} compareAtPrice={product.compareAtPrice} className="text-2xl text-salvia" />
+            </div>
           </div>
           <p className="text-xs leading-relaxed text-cinza">{product.description}</p>
           {product.colorName && (

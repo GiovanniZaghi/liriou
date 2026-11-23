@@ -67,6 +67,7 @@ export function Kits({ products }: { products: CatalogProduct[] }) {
               style={{ '--i': i } as React.CSSProperties}
               name={product.name}
               price={product.price}
+              compareAtPrice={product.compareAtPrice}
               kit={product.kit}
               tone={KIT_TAG_TONES[i % KIT_TAG_TONES.length]}
               action={

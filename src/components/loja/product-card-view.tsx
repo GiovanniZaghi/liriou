@@ -1,11 +1,12 @@
 import { Check } from 'lucide-react'
 import type { CatalogProduct, KitDetails } from '@/lib/api/types'
 import { formatBRL } from '@/lib/format'
+import { discountPercent } from '@/lib/products'
 import { cn } from '@/lib/utils'
 
 export type ProductCardData = Pick<
   CatalogProduct,
-  'name' | 'price' | 'colorName' | 'badge' | 'image' | 'hoverImage' | 'inStock'
+  'name' | 'price' | 'compareAtPrice' | 'colorName' | 'badge' | 'image' | 'hoverImage' | 'inStock'
 >
 
 interface ProductCardViewProps {
@@ -61,7 +62,7 @@ export function ProductCardView({ product, installments, onOpen, onAdd, classNam
 
       <div className="mt-6 flex items-center justify-between gap-3">
         <div>
-          <span className="font-serif text-lg font-medium">{formatBRL(product.price)}</span>
+          <PriceTag price={product.price} compareAtPrice={product.compareAtPrice} className="text-lg" />
           <p className="text-[10px] text-cinza">
             ou {installments}x de {formatBRL(product.price / installments)}
           </p>
@@ -85,6 +86,7 @@ export const KIT_TAG_TONES = ['bg-petala', 'bg-folha/15']
 interface KitCardViewProps {
   name: string
   price: number
+  compareAtPrice?: number | null
   kit: KitDetails
   tone?: string
   /** Botão de compra (a loja passa o da sacola; a pré-visualização, um estático) */
@@ -94,7 +96,7 @@ interface KitCardViewProps {
 }
 
 /** Visual do card da seção "Rituais Completos" (kits). */
-export function KitCardView({ name, price, kit, tone = KIT_TAG_TONES[0], action, ...rest }: KitCardViewProps) {
+export function KitCardView({ name, price, compareAtPrice, kit, tone = KIT_TAG_TONES[0], action, ...rest }: KitCardViewProps) {
   return (
     <article {...rest} className="flex flex-col justify-between rounded-3xl border border-borda bg-white p-8 shadow-sm">
       <div>
@@ -115,11 +117,39 @@ export function KitCardView({ name, price, kit, tone = KIT_TAG_TONES[0], action,
       </div>
       <div className="mt-8 flex items-center justify-between gap-4 border-t border-borda pt-6">
         <div>
-          <span className="font-serif text-xl font-medium">{formatBRL(price)}</span>
+          <PriceTag price={price} compareAtPrice={compareAtPrice} className="text-xl" />
           {kit.note && <p className="text-[10px] text-cinza">{kit.note}</p>}
         </div>
         {action}
       </div>
     </article>
+  )
+}
+
+interface PriceTagProps {
+  price: number
+  compareAtPrice?: number | null
+  /** Tamanho/cor do preço "Por" */
+  className?: string
+}
+
+/** Preço da vitrine. Em promoção: "De" riscado em cima, "Por" em destaque e o % de desconto. */
+export function PriceTag({ price, compareAtPrice, className }: PriceTagProps) {
+  const off = discountPercent(price, compareAtPrice)
+  if (!off || !compareAtPrice) return <span className={cn('font-serif font-medium', className)}>{formatBRL(price)}</span>
+
+  return (
+    <span className="flex flex-col">
+      <span className="text-[11px] text-cinza">
+        De <s>{formatBRL(compareAtPrice)}</s>
+      </span>
+      <span className="flex items-center gap-2">
+        <span className={cn('font-serif font-medium', className)}>
+          <span className="mr-1 font-sans text-[11px] font-normal text-cinza">Por</span>
+          {formatBRL(price)}
+        </span>
+        <span className="rounded-full bg-rubor/10 px-2 py-0.5 text-[10px] font-semibold text-rubor">-{off}%</span>
+      </span>
+    </span>
   )
 }

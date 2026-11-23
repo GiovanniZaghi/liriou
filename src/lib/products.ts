@@ -27,4 +27,10 @@ export function parsePrice(raw: string): number {
   return Math.round(Number(normalized) * 100) / 100
 }
 
+/** % de desconto do "De" para o "Por" (0 quando não há promoção). */
+export function discountPercent(price: number, compareAtPrice: number | null | undefined) {
+  if (!compareAtPrice || compareAtPrice <= price) return 0
+  return Math.round((1 - price / compareAtPrice) * 100)
+}
+
 export const formatPriceInput = (n: number) => n.toFixed(2).replace('.', ',')

@@ -63,6 +63,8 @@ function parseProductForm(fd: FormData): ProductPayload {
     sku: text(fd, 'sku'),
     category,
     price: parsePrice(text(fd, 'price')),
+    // Vazio ou zero = sem promoção
+    compareAtPrice: parsePrice(text(fd, 'compareAtPrice')) || null,
     description: text(fd, 'description'),
     colorName: optional(fd, 'colorName'),
     colorHex: optional(fd, 'colorHex'),

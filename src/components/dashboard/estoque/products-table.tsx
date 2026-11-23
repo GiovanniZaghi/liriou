@@ -48,7 +48,12 @@ export function ProductsTable({ rows }: { rows: AdminProduct[] }) {
               </td>
               <td className="px-5 py-3 font-mono text-[13px] text-musgo">{p.sku}</td>
               <td className="px-5 py-3 text-tinta">{categoryLabel(p.category)}</td>
-              <td className="px-5 py-3 text-right whitespace-nowrap tabular-nums">{formatBRL(p.price)}</td>
+              <td className="px-5 py-3 text-right whitespace-nowrap tabular-nums">
+                {p.compareAtPrice && p.compareAtPrice > p.price && (
+                  <s className="block text-[12px] text-musgo">{formatBRL(p.compareAtPrice)}</s>
+                )}
+                {formatBRL(p.price)}
+              </td>
               <td className="px-5 py-3 text-right whitespace-nowrap">
                 <span className={cn('font-semibold tabular-nums', p.stock === 0 ? 'text-rubor' : 'text-noite-900')}>{p.stock}</span>
                 <StockBadge product={p} />

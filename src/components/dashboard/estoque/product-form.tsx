@@ -4,7 +4,7 @@ import { Eye, EyeOff } from 'lucide-react'
 import { useActionState, useState } from 'react'
 import { saveProductAction, type ProductFormState } from '@/app/actions/products'
 import type { AdminProduct, ProductCategory } from '@/lib/api/types'
-import { CATEGORY_OPTIONS, formatPriceInput, parsePrice, slugify } from '@/lib/products'
+import { CATEGORY_OPTIONS, discountPercent, formatPriceInput, parsePrice, slugify } from '@/lib/products'
 import { cn } from '@/lib/utils'
 import { dashBtn } from '../page-header'
 import { GalleryField, ImageField } from './image-fields'
@@ -34,6 +34,7 @@ export function ProductForm({ product, installments }: ProductFormProps) {
     sku: product?.sku ?? '',
     category: (product?.category ?? 'scrunchie') as ProductCategory,
     price: product ? formatPriceInput(product.price) : '',
+    compareAtPrice: product?.compareAtPrice ? formatPriceInput(product.compareAtPrice) : '',
     description: product?.description ?? '',
     colorName: product?.colorName ?? '',
     colorHex: product?.colorHex ?? '#6A7B6C',
@@ -66,6 +67,11 @@ export function ProductForm({ product, installments }: ProductFormProps) {
 
   const stock = product?.stock ?? (Number(v.initialStock) || 0)
   const isKit = v.category === 'kit'
+  const priceNum = parsePrice(v.price) || 0
+  const compareNum = parsePrice(v.compareAtPrice) || null
+  const off = discountPercent(priceNum, compareNum)
+  // Aviso na hora, antes de salvar (a API também valida)
+  const compareError = compareNum && compareNum <= priceNum ? 'O preço "De" precisa ser maior que o "Por"' : undefined
 
   return (
     <form action={action} className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
@@ -94,9 +100,15 @@ export function ProductForm({ product, installments }: ProductFormProps) {
         </Card>
 
         <Card title="Preço e estoque">
-          <div className="grid gap-4 sm:grid-cols-3">
-            <Input label="Preço (R$)" name="price" value={v.price} error={err('price')} required inputMode="decimal"
-              placeholder="49,90" onChange={(x) => set('price', x.replace(/[^\d.,]/g, ''))} />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Input label="Preço “De” (R$)" name="compareAtPrice" value={v.compareAtPrice} inputMode="decimal" placeholder="69,90"
+              error={compareError ?? err('compareAtPrice')}
+              hint={off ? `Aparece riscado na loja · ${off}% de desconto` : 'Opcional. Aparece riscado na loja; vazio = sem promoção.'}
+              onChange={(x) => set('compareAtPrice', x.replace(/[^\d.,]/g, ''))} />
+            <Input label="Preço “Por” (R$)" name="price" value={v.price} error={err('price')} required inputMode="decimal"
+              placeholder="49,90" hint="Valor cobrado da cliente" onChange={(x) => set('price', x.replace(/[^\d.,]/g, ''))} />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
             <Input label="Estoque mínimo" name="minStock" type="number" min={0} value={v.minStock} error={err('minStock')}
               hint="Alerta de estoque baixo" onChange={(x) => set('minStock', x)} />
             {isNew ? (
@@ -203,7 +215,8 @@ export function ProductForm({ product, installments }: ProductFormProps) {
           installments={installments}
           card={{
             name: v.name || 'Nome do produto',
-            price: parsePrice(v.price) || 0,
+            price: priceNum,
+            compareAtPrice: compareNum,
             colorName: v.colorName || null,
             badge: v.badge || null,
             image: v.imageUrl,

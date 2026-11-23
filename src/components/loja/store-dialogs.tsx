@@ -126,7 +126,12 @@ function SearchModal() {
               className="flex w-full items-center justify-between rounded-2xl bg-algodao p-4 text-left transition-colors hover:bg-borda"
             >
               <span className="text-sm font-medium">{p.name}</span>
-              <span className="text-xs font-semibold text-salvia">{formatBRL(p.price)}</span>
+              <span className="text-right text-xs font-semibold text-salvia">
+                {p.compareAtPrice && p.compareAtPrice > p.price && (
+                  <s className="mr-1.5 font-normal text-cinza">{formatBRL(p.compareAtPrice)}</s>
+                )}
+                {formatBRL(p.price)}
+              </span>
             </button>
           ))}
           {q && (
