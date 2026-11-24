@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Collection, Kits } from '@/components/loja/collection'
 import { StoreHero } from '@/components/loja/hero'
 import { Manifesto, TrustBar } from '@/components/loja/manifesto'
+import { Moodboard } from '@/components/loja/moodboard'
 import { Reels, Testimonials } from '@/components/loja/reels'
 import { getCatalog } from '@/lib/api/catalog'
 
@@ -24,11 +25,12 @@ export default async function StorePage() {
   return (
     <>
       <StoreHero />
-      <Manifesto />
       <TrustBar />
+      <Moodboard />
+      <Reels />
       <Collection products={products} />
       <Kits products={products} />
-      <Reels />
+      <Manifesto />
       <Testimonials />
     </>
   )
