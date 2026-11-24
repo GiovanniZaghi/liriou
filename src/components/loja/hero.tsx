@@ -14,9 +14,14 @@ export function StoreHero() {
       <h1 className="sr-only">Líriou Scrunchies: a sua marca favorita está de volta. Menos pressa, mais cetim.</h1>
 
       <picture>
-        <source srcSet="/hero/banner-liriou.webp" type="image/webp" />
+        {/* Cada tela baixa o tamanho que precisa (celular ~47 KB, retina grande ~240 KB) */}
+        <source
+          type="image/webp"
+          sizes="100vw"
+          srcSet="/hero/banner-liriou-960.webp 960w, /hero/banner-liriou-1600.webp 1600w, /hero/banner-liriou-2400.webp 2400w, /hero/banner-liriou-3200.webp 3200w"
+        />
         <img
-          src="/hero/banner-liriou.jpg"
+          src="/hero/banner-liriou-1920.jpg"
           alt="Scrunchies de cetim Líriou em várias cores no pulso e prendendo um rabo de cavalo"
           width={1600}
           height={800}

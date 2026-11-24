@@ -6,7 +6,7 @@ import { VitrineToolbar } from '@/components/loja/vitrine-toolbar'
 import { getCatalog } from '@/lib/api/catalog'
 import { CATEGORY_OPTIONS } from '@/lib/products'
 import { cn } from '@/lib/utils'
-import { applyVitrineFilters, parseVitrineParams, vitrineHref, type VitrineFilters } from '@/lib/vitrine'
+import { applyVitrineFilters, parseVitrineParams, productTone, TONE_OPTIONS, vitrineHref, type VitrineFilters } from '@/lib/vitrine'
 
 export const metadata: Metadata = {
   title: 'Vitrine | Líriou',
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: { title: 'Vitrine · Líriou', url: '/vitrine', locale: 'pt_BR', type: 'website' },
 }
 
-type SearchParams = Promise<{ q?: string; categoria?: string; ordem?: string; disponivel?: string; page?: string }>
+type SearchParams = Promise<{ q?: string; categoria?: string; tom?: string; ordem?: string; disponivel?: string; page?: string }>
 
 export default async function VitrinePage({ searchParams }: { searchParams: SearchParams }) {
   const [products, params] = await Promise.all([getCatalog(), searchParams])
@@ -26,17 +26,27 @@ export default async function VitrinePage({ searchParams }: { searchParams: Sear
     (c) => c.count > 0,
   )
 
+  const tones = TONE_OPTIONS.map((t) => ({
+    value: t.value,
+    label: t.label,
+    swatch: t.swatch,
+    count: products.filter((p) => productTone(p) === t.value).length,
+  })).filter((t) => t.count > 0)
+  const activeTone = TONE_OPTIONS.find((t) => t.value === filters.tone)
+
   return (
     <div className="mx-auto max-w-7xl px-4 pt-14 pb-24 sm:px-6 lg:px-8">
       <header className="mb-10 text-center">
         <span className="eyebrow text-rubor">Vitrine</span>
-        <h1 className="mt-2 font-serif text-4xl text-grafite sm:text-5xl">Toda a coleção</h1>
+        <h1 className="mt-2 font-serif text-4xl text-grafite sm:text-5xl">
+          {activeTone ? `Tons de ${activeTone.label.toLowerCase()}` : 'Toda a coleção'}
+        </h1>
         <p className="mx-auto mt-3 max-w-xl text-sm text-cinza">
           Peças feitas para o dia a dia, com toque macio e cores pensadas para cuidar do seu cabelo com carinho e estilo.
         </p>
       </header>
 
-      <VitrineToolbar filters={filters} categories={categories} total={result.total} />
+      <VitrineToolbar filters={filters} categories={categories} tones={tones} total={result.total} />
 
       {products.length === 0 ? (
         <p className="mt-10 rounded-3xl border border-borda bg-white p-10 text-center text-sm text-cinza">

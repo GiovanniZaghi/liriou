@@ -1,11 +1,12 @@
 import Link from 'next/link'
+import { vitrineHref, type VitrineTone } from '@/lib/vitrine'
 
 /** Ordem do mosaico: linha de cima (marrom, verde) e de baixo (terracota, azul). */
-const TILES = [
-  { src: '/moodboard/marrom.webp', alt: 'Scrunchie de cetim marrom com rosas, café e esmalte nude' },
-  { src: '/moodboard/verde.webp', alt: 'Scrunchie de cetim verde-oliva com maçãs verdes e alfaiataria' },
-  { src: '/moodboard/terracota.webp', alt: 'Scrunchie de cetim terracota em clima de pôr do sol' },
-  { src: '/moodboard/azul.webp', alt: 'Scrunchie de cetim azul-claro com hortênsias e céu' },
+const TILES: { tone: VitrineTone; src: string; alt: string }[] = [
+  { tone: 'marrom', src: '/moodboard/marrom.webp', alt: 'Scrunchie de cetim marrom com rosas, café e esmalte nude' },
+  { tone: 'verde', src: '/moodboard/verde.webp', alt: 'Scrunchie de cetim verde-oliva com maçãs verdes e alfaiataria' },
+  { tone: 'laranja', src: '/moodboard/terracota.webp', alt: 'Scrunchie de cetim terracota em clima de pôr do sol' },
+  { tone: 'azul', src: '/moodboard/azul.webp', alt: 'Scrunchie de cetim azul-claro com hortênsias e céu' },
 ]
 
 /**
@@ -19,7 +20,8 @@ export function Moodboard() {
         {TILES.map((t, i) => (
           <Link
             key={t.src}
-            href="/vitrine"
+            href={vitrineHref({ tone: t.tone })}
+            aria-label={`Ver scrunchies em tons de ${t.tone}`}
             data-reveal
             style={{ '--i': i } as React.CSSProperties}
             className="group relative block aspect-[4/5] overflow-hidden rounded-3xl shadow-sm transition-shadow hover:shadow-xl"

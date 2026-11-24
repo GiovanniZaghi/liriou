@@ -6,19 +6,21 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState, useTransition } from 'react'
 import type { ProductCategory } from '@/lib/api/types'
 import { cn } from '@/lib/utils'
-import { SORT_OPTIONS, vitrineHref, type VitrineFilters, type VitrineSort } from '@/lib/vitrine'
+import { SORT_OPTIONS, vitrineHref, type VitrineFilters, type VitrineSort, type VitrineTone } from '@/lib/vitrine'
 
 interface VitrineToolbarProps {
   filters: VitrineFilters
   /** Só as categorias que têm produto na vitrine */
   categories: { value: ProductCategory; label: string; count: number }[]
+  /** Só os tons que têm produto */
+  tones: { value: VitrineTone; label: string; swatch: string; count: number }[]
   total: number
 }
 
 const chip = 'inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-medium transition-colors'
 
 /** Busca, categorias, ordenação e "só disponíveis". Tudo vive na URL (dá para compartilhar o link). */
-export function VitrineToolbar({ filters, categories, total }: VitrineToolbarProps) {
+export function VitrineToolbar({ filters, categories, tones, total }: VitrineToolbarProps) {
   const router = useRouter()
   const [pending, startTransition] = useTransition()
   const [query, setQuery] = useState(filters.q)
@@ -97,12 +99,34 @@ export function VitrineToolbar({ filters, categories, total }: VitrineToolbarPro
         })}
       </nav>
 
+      {tones.length > 0 && (
+        <nav aria-label="Cores" className="-mx-4 flex items-center gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
+          <span className="shrink-0 pr-1 text-xs text-cinza">Cores:</span>
+          {tones.map((t) => {
+            const active = filters.tone === t.value
+            return (
+              <Link
+                key={t.value}
+                href={vitrineHref({ ...filters, tone: active ? null : t.value, page: 1 })}
+                scroll={false}
+                aria-current={active ? 'page' : undefined}
+                className={cn(chip, 'shrink-0', active ? 'border-grafite bg-grafite text-white' : 'border-borda bg-white text-grafite hover:border-grafite')}
+              >
+                <span className="size-3.5 rounded-full ring-1 ring-black/10" style={{ background: t.swatch }} aria-hidden />
+                {t.label}
+                {active ? <X className="size-3" aria-hidden /> : <span className="text-[10px] text-cinza">{t.count}</span>}
+              </Link>
+            )
+          })}
+        </nav>
+      )}
+
       <div className="flex items-center justify-between gap-3 text-xs text-cinza" aria-live="polite">
         <span>
           {total} {total === 1 ? 'produto' : 'produtos'}
           {filters.q && <> para “<strong className="text-grafite">{filters.q}</strong>”</>}
         </span>
-        {(filters.q || filters.category || filters.inStock || filters.sort !== 'destaques') && (
+        {(filters.q || filters.category || filters.tone || filters.inStock || filters.sort !== 'destaques') && (
           <Link href="/vitrine" scroll={false} className="inline-flex items-center gap-1 font-medium text-rubor hover:underline">
             <X className="size-3.5" aria-hidden /> Limpar filtros
           </Link>
