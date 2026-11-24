@@ -9,23 +9,31 @@ const TILES = [
 ]
 
 /**
- * Mosaico de cores (2 × 2, de ponta a ponta, sem espaço entre as fotos).
- * As artes são em pé; o recorte fica no centro, onde está a scrunchie.
+ * Mosaico de cores: 4 artes lado a lado no computador (2 × 2 no celular), dentro da largura do site,
+ * com cantos arredondados. As artes são em pé; o recorte fica no centro, onde está a scrunchie.
  */
 export function Moodboard() {
   return (
-    <section aria-label="Cores da coleção" className="grid grid-cols-2">
-      {TILES.map((t) => (
-        <Link key={t.src} href="/vitrine" className="group relative block aspect-[3/4] overflow-hidden md:aspect-[4/3]">
-          <img
-            src={t.src}
-            alt={t.alt}
-            loading="lazy"
-            decoding="async"
-            className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-        </Link>
-      ))}
+    <section aria-label="Cores da coleção" className="px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        {TILES.map((t, i) => (
+          <Link
+            key={t.src}
+            href="/vitrine"
+            data-reveal
+            style={{ '--i': i } as React.CSSProperties}
+            className="group relative block aspect-[4/5] overflow-hidden rounded-3xl shadow-sm transition-shadow hover:shadow-xl"
+          >
+            <img
+              src={t.src}
+              alt={t.alt}
+              loading="lazy"
+              decoding="async"
+              className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+          </Link>
+        ))}
+      </div>
     </section>
   )
 }
