@@ -14,6 +14,7 @@ export const dynamic = 'force-dynamic'
 const SEGMENTS: { value: CustomerSegment; label: string }[] = [
   { value: 'buyers', label: 'Já compraram' },
   { value: 'not_bought', label: 'Ainda não compraram' },
+  { value: 'birthday_month', label: '🎂 Aniversariantes do mês' },
 ]
 
 type SearchParams = Promise<{ q?: string; segmento?: string; page?: string }>

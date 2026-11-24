@@ -8,6 +8,14 @@ export function maskPhone(value: string) {
   return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`
 }
 
+/** Formata dígitos como `07/03/1995`. */
+export function maskDate(value: string) {
+  const d = value.replace(/\D/g, '').slice(0, 8)
+  if (d.length <= 2) return d
+  if (d.length <= 4) return `${d.slice(0, 2)}/${d.slice(2)}`
+  return `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}`
+}
+
 /** Formata dígitos como `01234-567`. */
 export function maskCep(value: string) {
   const d = value.replace(/\D/g, '').slice(0, 8)

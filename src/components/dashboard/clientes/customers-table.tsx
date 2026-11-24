@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import type { CustomerRow } from '@/lib/api/types'
-import { formatBRL, formatDateTime, formatPhone } from '@/lib/format'
+import { formatBirthday, formatBRL, formatDateTime, formatPhone } from '@/lib/format'
 
 export const customerHref = (email: string) => `/dashboard/clientes/${encodeURIComponent(email)}`
 
@@ -32,7 +32,12 @@ export function CustomersTable({ rows }: { rows: CustomerRow[] }) {
             <tr key={r.email} className="border-b border-linho/70 last:border-0 hover:bg-leite/60">
               <td className="px-5 py-3">
                 <Link href={customerHref(r.email)} className="block">
-                  <span className="block font-medium text-noite-900 hover:underline">{r.name}</span>
+                  <span className="block font-medium text-noite-900 hover:underline">
+                    {r.name}
+                    {r.birthDate && (
+                      <span title="Aniversário" className="ml-2 text-[12px] font-normal text-musgo">🎂 {formatBirthday(r.birthDate)}</span>
+                    )}
+                  </span>
                   <span className="block text-[12px] text-musgo">
                     {r.email} · {formatPhone(r.phone)}
                   </span>

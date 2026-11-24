@@ -9,6 +9,9 @@ import { formatBRL } from '@/lib/format'
 import { cn } from '@/lib/utils'
 import { useStore } from './store-provider'
 
+/** Retirada em mãos (código fixo da API): sem transportadora, combinada pelo WhatsApp */
+const PICKUP = 'RETIRADA'
+
 const days = (n: number) => (n <= 0 ? 'Prazo informado no envio' : n === 1 ? 'Chega em 1 dia útil' : `Chega em até ${n} dias úteis`)
 
 interface ShippingQuotePickerProps {
@@ -107,14 +110,16 @@ export function ShippingQuotePicker({ cep, onSelect, size = 'md' }: ShippingQuot
                   />
                   <span>
                     <span className="block font-medium text-grafite">{opt.label}</span>
-                    <span className="block text-[11px] text-cinza">{days(opt.deliveryDays)}</span>
+                    <span className="block text-[11px] text-cinza">
+                      {opt.serviceCode === PICKUP ? 'Retire direto com a gente · combinamos pelo WhatsApp' : days(opt.deliveryDays)}
+                    </span>
                   </span>
                 </span>
                 <span className="flex items-center gap-2 font-semibold whitespace-nowrap text-grafite">
                   {choosing === opt.serviceCode && <Loader2 className="size-3.5 animate-spin" aria-hidden />}
                   {opt.price === 0 ? (
                     <span className="text-folha">
-                      Grátis {opt.originalPrice > 0 && <s className="ml-1 font-normal text-cinza">{formatBRL(opt.originalPrice)}</s>}
+                      Grátis {opt.serviceCode !== PICKUP && opt.originalPrice > 0 && <s className="ml-1 font-normal text-cinza">{formatBRL(opt.originalPrice)}</s>}
                     </span>
                   ) : (
                     formatBRL(opt.price)

@@ -22,7 +22,7 @@ import {
   type Errors,
 } from '@/lib/checkout'
 import { formatBRL } from '@/lib/format'
-import { maskCep, maskCpf, maskPhone } from '@/lib/masks'
+import { maskCep, maskCpf, maskDate, maskPhone } from '@/lib/masks'
 import { cn } from '@/lib/utils'
 import { ShippingQuotePicker } from '../loja/shipping-quote-picker'
 import { useStore } from '../loja/store-provider'
@@ -236,6 +236,10 @@ export function CheckoutFlow() {
                 <CheckoutField label="CPF" name="cpf" inputMode="numeric" required placeholder="000.000.000-00"
                   value={customer.cpf} error={customerErrors.cpf} onChange={(v) => setC('cpf', maskCpf(v))}
                   hint="Necessário para a nota fiscal" />
+                <CheckoutField label="Aniversário (opcional)" name="birthDate" inputMode="numeric" autoComplete="bday"
+                  placeholder="DD/MM/AAAA" value={customer.birthDate ?? ''} error={customerErrors.birthDate}
+                  onChange={(v) => setC('birthDate', maskDate(v))}
+                  hint="É por uma boa causa: nos lembraremos de você no seu dia 🎂" />
               </div>
               <StepActions primary="Continuar para entrega" loading={saving} />
             </form>
@@ -309,6 +313,7 @@ export function CheckoutFlow() {
                 <p className="font-medium text-grafite">{customer.name}</p>
                 <p>{customer.email} · {customer.phone}</p>
                 <p>CPF {customer.cpf}</p>
+                {customer.birthDate && <p>Aniversário {customer.birthDate}</p>}
               </ReviewBlock>
 
               <ReviewBlock title="Entrega" onEdit={() => goTo(1)}>

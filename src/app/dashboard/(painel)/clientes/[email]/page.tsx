@@ -6,7 +6,7 @@ import { dashBtn, PageHeader, pageShell } from '@/components/dashboard/page-head
 import { OrderStatusBadge, StageBadge } from '@/components/dashboard/pedidos/order-badges'
 import { getCustomer } from '@/lib/api/admin'
 import { ApiError } from '@/lib/api/http'
-import { formatBRL, formatDateTime, formatNumber, formatPhone } from '@/lib/format'
+import { formatBirthday, formatBRL, formatDateTime, formatNumber, formatPhone } from '@/lib/format'
 import { maskCpf } from '@/lib/masks'
 import { shipmentStatusLabel } from '@/lib/orders'
 
@@ -138,6 +138,7 @@ export default async function ClienteDetalhePage({ params }: { params: Params })
               <Field label="E-mail" value={c.email} />
               <Field label="Telefone" value={formatPhone(c.phone)} />
               {c.cpf && <Field label="CPF" value={maskCpf(c.cpf)} />}
+              {c.birthDate && <Field label="Aniversário" value={`🎂 ${formatBirthday(c.birthDate, true)}`} />}
               <Field label="Última atividade" value={formatDateTime(new Date(c.lastActivityAt))} />
             </dl>
           </Card>

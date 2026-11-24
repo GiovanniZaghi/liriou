@@ -27,3 +27,13 @@ export function painLabel(value: string | null) {
   if (!value) return 'Não respondeu'
   return PAIN_OPTIONS.find((o) => o.value === value)?.label ?? value
 }
+
+/** "07/03" ou, com idade, "07/03/1995 (31 anos)". Recebe AAAA-MM-DD. */
+export function formatBirthday(iso: string, withAge = false) {
+  const [y, m, d] = iso.slice(0, 10).split('-').map(Number)
+  const dm = `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}`
+  if (!withAge) return dm
+  const now = new Date()
+  const age = now.getFullYear() - y - (now.getMonth() + 1 < m || (now.getMonth() + 1 === m && now.getDate() < d) ? 1 : 0)
+  return `${dm}/${y} (${age} anos)`
+}

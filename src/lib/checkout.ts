@@ -28,7 +28,17 @@ export function validateCustomer(c: CheckoutCustomer): Errors {
   if (!isValidCpf(c.cpf)) e.cpf = 'CPF inválido'
   const phone = digits(c.phone)
   if (phone.length < 10 || phone.length > 11) e.phone = 'Informe um telefone com DDD'
+  if (c.birthDate?.trim() && !isValidBirthDate(c.birthDate)) e.birthDate = 'Data inválida (use DD/MM/AAAA)'
   return e
+}
+
+/** DD/MM/AAAA de verdade (sem 31/02), entre 1900 e hoje. */
+function isValidBirthDate(v: string) {
+  const m = v.trim().match(/^(\d{2})\/(\d{2})\/(\d{4})$/)
+  if (!m) return false
+  const [d, mo, y] = [Number(m[1]), Number(m[2]), Number(m[3])]
+  const date = new Date(y, mo - 1, d)
+  return date.getDate() === d && date.getMonth() === mo - 1 && y >= 1900 && date <= new Date()
 }
 
 export function validateAddress(a: CheckoutAddress): Errors {

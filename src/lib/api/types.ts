@@ -238,6 +238,8 @@ export interface CheckoutCustomer {
   email: string
   cpf: string
   phone: string
+  /** Aniversário (opcional), DD/MM/AAAA como a cliente digitou */
+  birthDate?: string
 }
 
 export interface CheckoutAddress {
@@ -342,12 +344,14 @@ export type CheckoutStage = 'cart' | 'identified' | 'delivery' | 'ordered'
 
 // ─── Clientes (dashboard): uma por e-mail ─────────────────────────────────────
 
-export type CustomerSegment = 'buyers' | 'not_bought'
+export type CustomerSegment = 'buyers' | 'not_bought' | 'birthday_month'
 
 export interface CustomerRow {
   email: string
   name: string
   phone: string
+  /** AAAA-MM-DD, quando a cliente informou */
+  birthDate: string | null
   city: string | null
   state: string | null
   /** Pedidos não cancelados */
@@ -403,7 +407,7 @@ export interface AdminOrderRow {
 }
 
 export interface AdminOrderDetail extends AdminOrderRow {
-  customer: AdminOrderRow['customer'] & { cpf: string }
+  customer: AdminOrderRow['customer'] & { cpf: string; birthDate: string | null }
   shippingAddress: Order['shippingAddress']
   shippingLabel: string
   couponCode: string | null

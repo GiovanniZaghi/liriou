@@ -7,7 +7,7 @@ import { OrderStatusBadge } from '@/components/dashboard/pedidos/order-badges'
 import { ShipmentCard } from '@/components/dashboard/pedidos/shipment-card'
 import { getOrder, getShipment } from '@/lib/api/admin'
 import { ApiError } from '@/lib/api/http'
-import { formatBRL, formatDateTime, formatPhone } from '@/lib/format'
+import { formatBirthday, formatBRL, formatDateTime, formatPhone } from '@/lib/format'
 import { maskCpf } from '@/lib/masks'
 import { PAYMENT_METHOD_LABEL, PAYMENT_STATUS } from '@/lib/orders'
 import { cn } from '@/lib/utils'
@@ -138,6 +138,7 @@ export default async function PedidoDetalhePage({ params }: { params: Params }) 
               <Field label="E-mail" value={c.email} />
               <Field label="Telefone" value={formatPhone(c.phone)} />
               <Field label="CPF" value={maskCpf(c.cpf)} />
+              {c.birthDate && <Field label="Aniversário" value={`🎂 ${formatBirthday(c.birthDate, true)}`} />}
             </dl>
             <Link href={customerHref} className={`${dashBtn.ghost} mt-3 -ml-3`}>
               <UserRound className="size-4" aria-hidden /> Ver todos os pedidos dela
