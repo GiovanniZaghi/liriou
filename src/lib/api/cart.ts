@@ -22,6 +22,9 @@ export const cartApi = {
 
   removeCoupon: (cartId: string) => apiFetch<Cart>(`/carts/${cartId}/coupon`, { method: 'DELETE' }),
 
+  setGiftWrap: (cartId: string, giftWrap: boolean) =>
+    apiFetch<Cart>(`/carts/${cartId}/gift-wrap`, { method: 'PUT', body: { giftWrap } }),
+
   /** Opções de frete (Frenet) para o CEP, com o peso real da sacola */
   quoteShipping: (cartId: string, cep: string) =>
     apiFetch<ShippingQuoteResult>(`/carts/${cartId}/shipping/quote`, { method: 'POST', body: { cep } }),

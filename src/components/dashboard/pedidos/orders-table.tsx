@@ -40,7 +40,14 @@ export function OrdersTable({ rows, emptyMessage = 'Nenhum pedido encontrado.' }
               </td>
               <td className="px-5 py-3">
                 <Link href={`/dashboard/clientes/${encodeURIComponent(o.customer.email)}`} className="block">
-                  <span className="block font-medium text-noite-900 hover:underline">{o.customer.name}</span>
+                  <span className="block font-medium text-noite-900 hover:underline">
+                    {o.customer.name}
+                    {o.giftWrap && (
+                      <span title="Embalagem de Natal" className="ml-2 rounded-full bg-rubor/10 px-2 py-0.5 text-[11px] font-semibold text-rubor">
+                        🎁 Natal
+                      </span>
+                    )}
+                  </span>
                   <span className="block text-[12px] text-musgo">
                     {o.customer.email}
                     {o.city && ` · ${o.city}/${o.state}`}

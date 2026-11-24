@@ -124,6 +124,7 @@ export function PaymentStep({ orderId }: { orderId: string }) {
           subtotal={order.totals.subtotal}
           discount={order.totals.discount}
           couponCode={order.couponCode}
+          giftWrap={order.giftWrap}
           shipping={order.totals.shipping}
           total={order.totals.total}
           installments={settings.installments}

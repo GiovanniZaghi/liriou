@@ -63,6 +63,11 @@ export default async function PedidoDetalhePage({ params }: { params: Params }) 
               <h2 className="text-[16px] font-semibold text-noite-900">Itens</h2>
               <OrderStatusBadge status={order.status} />
             </header>
+            {order.giftWrap && (
+              <p className="flex items-center gap-2 border-b border-linho bg-rubor/5 px-5 py-3 text-[14px] font-semibold text-rubor">
+                🎁 Enviar com embalagem de Natal
+              </p>
+            )}
             <ul className="divide-y divide-linho/70">
               {order.items.map((i) => (
                 <li key={i.productId} className="flex items-center gap-4 px-5 py-3">

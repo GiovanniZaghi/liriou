@@ -1,6 +1,6 @@
 'use client'
 
-import { Minus, Plus, ShoppingBag, Trash, X } from 'lucide-react'
+import { Gift, Minus, Plus, ShoppingBag, Trash, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -122,6 +122,24 @@ export function CartDrawer() {
       </div>
 
       <div className="space-y-4 border-t border-borda bg-white p-6">
+        {items.length > 0 && (
+          <label
+            className={cn(
+              'flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-xs transition-colors select-none',
+              cart?.giftWrap ? 'border-rubor/40 bg-petala/40' : 'border-borda bg-areia hover:border-rubor/40',
+            )}
+          >
+            <input
+              type="checkbox"
+              checked={cart?.giftWrap ?? false}
+              onChange={(e) => store.setGiftWrap(e.target.checked)}
+              className="size-4 shrink-0 cursor-pointer accent-rubor"
+            />
+            <Gift className="size-4 shrink-0 text-rubor" aria-hidden />
+            <span className="font-medium text-grafite">Quero embalagem de Natal</span>
+          </label>
+        )}
+
         {cart?.coupon ? (
           <div
             className={cn(

@@ -75,6 +75,8 @@ export interface Cart {
   id: string
   items: CartItem[]
   itemCount: number
+  /** Embalagem de Natal */
+  giftWrap: boolean
   coupon: {
     code: string
     /** Ex.: "10% OFF" ou "R$ 20,00 OFF" */
@@ -259,6 +261,7 @@ export interface Order {
   shippingAddress: Omit<CheckoutAddress, 'complement'> & { complement: string | null }
   shippingOption: { id: string; label: string }
   couponCode: string | null
+  giftWrap: boolean
   items: { productId: string; name: string; image: string; unitPrice: number; quantity: number; lineTotal: number }[]
   itemCount: number
   totals: { subtotal: number; discount: number; shipping: number; total: number }
@@ -391,6 +394,8 @@ export interface AdminOrderRow {
   state: string
   itemCount: number
   total: number
+  /** Embalagem de Natal */
+  giftWrap: boolean
   /** Tentativa de pagamento mais recente */
   payment: { method: PaymentMethod; status: PaymentStatus; installments: number } | null
   shipment: { status: string; trackingNumber: string | null } | null

@@ -18,10 +18,10 @@ export type VitrineSort = (typeof SORT_OPTIONS)[number]['value']
  * A cor de cada produto é descoberta pelo nome (produto + cor); o código da cor só entra se o nome não disser nada.
  */
 export const TONE_OPTIONS = [
-  { value: 'marrom', label: 'Marrom', swatch: '#5A3A2A', words: ['marrom', 'chocolate', 'cafe', 'caramelo', 'castanho', 'canela', 'bege', 'begezinha', 'nude', 'mocha', 'camel'] },
-  { value: 'verde', label: 'Verde', swatch: '#6B7A3C', words: ['verde', 'salvia', 'musgo', 'oliva', 'azeitona', 'menta', 'esmeralda', 'militar'] },
-  { value: 'laranja', label: 'Laranja', swatch: '#C25A1C', words: ['laranja', 'terracota', 'cobre', 'ferrugem', 'tangerina', 'pessego', 'coral', 'amarelo', 'amarela', 'mostarda'] },
-  { value: 'azul', label: 'Azul', swatch: '#8FB3E0', words: ['azul', 'petroleo', 'marinho', 'celeste', 'turquesa', 'denim', 'jeans', 'ceu'] },
+  { value: 'marrom', label: 'Marrom e preto', swatch: '#5A3A2A', words: ['marrom', 'chocolate', 'cafe', 'castanho', 'preto', 'preta'] },
+  { value: 'verde', label: 'Verde', swatch: '#6B7A3C', words: ['verde', 'salvia', 'musgo', 'oliva', 'azeitona', 'menta', 'esmeralda'] },
+  { value: 'laranja', label: 'Laranja e amarelo', swatch: '#C25A1C', words: ['laranja', 'terracota', 'cobre', 'tangerina', 'amarelo', 'amarela', 'amarelinho', 'mostarda'] },
+  { value: 'azul', label: 'Azul e roxo', swatch: '#8FB3E0', words: ['azul', 'petroleo', 'marinho', 'celeste', 'lilas', 'roxo', 'roxa', 'beringela', 'berinjela', 'lavanda'] },
 ] as const
 
 export type VitrineTone = (typeof TONE_OPTIONS)[number]['value']
@@ -87,7 +87,7 @@ function toneFromHex(hex: string | null): VitrineTone | null {
 }
 
 /** Cores que existem na loja mas não estão entre os tons (o nome do produto manda sobre a cor cadastrada). */
-const OTHER_COLORS = new Set(['rosa', 'pink', 'lilas', 'roxa', 'roxo', 'preta', 'preto', 'branca', 'branco', 'perola', 'perolada', 'cinza', 'vermelha', 'vermelho', 'vinho'])
+const OTHER_COLORS = new Set(['rosa', 'pink', 'branca', 'branco', 'perola', 'perolada', 'bege', 'begezinha', 'nude', 'cinza', 'vermelha', 'vermelho', 'vinho'])
 
 /** Em qual tom o produto entra (null = nenhum dos tons da vitrine). */
 export function productTone(p: Pick<CatalogProduct, 'name' | 'colorName' | 'colorHex'>): VitrineTone | null {

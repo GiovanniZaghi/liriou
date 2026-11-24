@@ -47,6 +47,8 @@ interface StoreContextValue {
   /** null = aplicado; texto = motivo da recusa */
   applyCoupon: (code: string) => Promise<string | null>
   removeCoupon: () => void
+  /** Embalagem de Natal (sim/não) */
+  setGiftWrap: (giftWrap: boolean) => void
   /** Escolhe o frete cotado. null = ok; texto = motivo da falha */
   selectShipping: (cep: string, serviceCode: string) => Promise<string | null>
   /** A sacola virou pedido (ou sumiu no servidor): esquece a sacola local */
@@ -202,6 +204,9 @@ export function StoreProvider({ products, settings, children }: StoreProviderPro
     },
     removeCoupon() {
       void mutate((id) => cartApi.removeCoupon(id))
+    },
+    setGiftWrap(giftWrap) {
+      void mutate((id) => cartApi.setGiftWrap(id, giftWrap))
     },
     async selectShipping(cep, serviceCode) {
       let reason = 'Não foi possível escolher este frete.'

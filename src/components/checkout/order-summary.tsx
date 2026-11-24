@@ -17,6 +17,8 @@ interface OrderSummaryProps {
   couponCode?: string | null
   /** Cupom na sacola mas sem desconto agora (expirou, falta mínimo...) */
   couponNotice?: string | null
+  /** Embalagem de Natal */
+  giftWrap?: boolean
   /** null = ainda não escolhido */
   shipping: number | null
   total: number
@@ -25,7 +27,7 @@ interface OrderSummaryProps {
 }
 
 /** Resumo lateral: itens + totais (sacola durante o checkout; pedido na etapa de pagamento). */
-export function OrderSummary({ items, subtotal, discount, couponCode, couponNotice, shipping, total, installments, footer }: OrderSummaryProps) {
+export function OrderSummary({ items, subtotal, discount, couponCode, couponNotice, giftWrap, shipping, total, installments, footer }: OrderSummaryProps) {
   return (
     <aside aria-label="Resumo do pedido" className="rounded-3xl border border-borda bg-white p-6 shadow-sm lg:sticky lg:top-6">
       <h2 className="font-serif text-xl text-grafite">Resumo do pedido</h2>
@@ -49,6 +51,7 @@ export function OrderSummary({ items, subtotal, discount, couponCode, couponNoti
 
       <dl className="mt-2 space-y-2 border-t border-borda pt-4 text-xs text-cinza">
         <Row label="Subtotal" value={formatBRL(subtotal)} />
+        {giftWrap && <Row label="Embalagem de Natal" value="Incluída 🎁" className="text-rubor" />}
         <Row label="Envio" value={shipping === null ? 'A escolher' : shipping === 0 ? 'Grátis' : formatBRL(shipping)} />
         {discount > 0 && <Row label={`Desconto${couponCode ? ` (${couponCode})` : ''}`} value={`- ${formatBRL(discount)}`} className="text-salvia" />}
       </dl>

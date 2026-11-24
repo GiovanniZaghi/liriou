@@ -370,6 +370,7 @@ export function CheckoutFlow() {
           discount={cart.totals.discount}
           couponCode={cart.coupon?.code}
           couponNotice={cart.coupon?.notice}
+          giftWrap={cart.giftWrap}
           shipping={cart.totals.shipping}
           total={cart.totals.total}
           installments={settings.installments}
