@@ -1,69 +1,37 @@
-import { Feather } from 'lucide-react'
 import Link from 'next/link'
 
-/** Hero na cor-assinatura da marca (verde-noite + pétala), como no logo e no Instagram. */
+const btn =
+  'inline-flex w-full items-center justify-center rounded-full px-8 py-3.5 text-sm font-semibold shadow-lg transition-all hover:-translate-y-0.5 sm:w-auto'
+
+/**
+ * Banner de abertura (arte da campanha "A sua marca favorita está de volta").
+ * O texto e o logo já estão na imagem; os botões ficam sobre ela no desktop e logo abaixo no celular,
+ * onde a arte fica pequena demais para receber os botões por cima.
+ */
 export function StoreHero() {
   return (
-    <section
-      id="home"
-      className="relative flex min-h-[85vh] scroll-mt-20 items-center justify-center overflow-hidden bg-noite-900 px-4 py-16 text-leite sm:px-6 lg:px-8"
-    >
-      {/* Brilho suave de pétala e folha ao fundo */}
-      <div aria-hidden className="pointer-events-none absolute -top-40 -right-32 size-[520px] rounded-full bg-rubor/35 blur-3xl" />
-      <div aria-hidden className="pointer-events-none absolute -bottom-48 -left-40 size-[560px] rounded-full bg-folha/25 blur-3xl" />
+    <section id="home" className="relative scroll-mt-20 bg-[#bdbdbd]">
+      <h1 className="sr-only">Líriou Scrunchies: a sua marca favorita está de volta. Menos pressa, mais cetim.</h1>
 
-      <div className="relative mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-12 lg:grid-cols-2">
-        <div className="z-10 space-y-6 text-center lg:text-left">
-          <span className="inline-block rounded-full bg-petala px-4 py-1.5 text-xs font-semibold tracking-widest text-noite-900 uppercase">
-            Cool girls dormem no cetim 🌸
-          </span>
-          <h1 className="font-serif text-5xl leading-[1.05] text-leite sm:text-6xl lg:text-7xl">
-            Menos pressa, <em className="text-petala italic">mais cetim</em>
-            <span className="text-folha-claro">.</span>
-          </h1>
-          <p className="mx-auto max-w-lg text-base leading-relaxed text-leite/80 sm:text-lg lg:mx-0">
-            Scrunchies e toucas de cetim feitos para acompanhar seus dias, seus momentos de descanso e os pequenos cuidados
-            com você.
-          </p>
-          <div className="flex flex-col items-center justify-center gap-4 pt-2 sm:flex-row lg:justify-start">
-            <Link
-              href="/vitrine"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-petala px-8 py-4 font-semibold text-noite-900 shadow-lg transition-all hover:-translate-y-0.5 hover:bg-[#ffdbe5] sm:w-auto"
-            >
-              Conheça a coleção
-            </Link>
-            <a
-              href="#manifesto"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-leite/30 px-8 py-4 font-medium text-leite transition-all hover:border-petala hover:text-petala sm:w-auto"
-            >
-              Nossa história
-            </a>
-          </div>
-        </div>
+      <picture>
+        <source srcSet="/hero/banner-liriou.webp" type="image/webp" />
+        <img
+          src="/hero/banner-liriou.jpg"
+          alt="Scrunchies de cetim Líriou em várias cores no pulso e prendendo um rabo de cavalo"
+          width={1600}
+          height={800}
+          fetchPriority="high"
+          className="mx-auto aspect-[2/1] max-h-[85vh] w-full object-cover"
+        />
+      </picture>
 
-        <div className="relative flex justify-center">
-          <div className="card-in relative h-[450px] w-full max-w-md rotate-1 overflow-hidden rounded-3xl bg-petala shadow-2xl ring-8 ring-petala/20 sm:h-[520px]">
-            <img
-              src="https://placehold.co/600x800/FFCFDD/0B2E1F?text=Lirio.u"
-              alt="Scrunchies de cetim Líriou"
-              className="size-full object-cover"
-            />
-            <div className="absolute right-6 bottom-6 left-6 flex items-center justify-between gap-3 rounded-2xl bg-leite/95 p-4 text-grafite shadow-lg backdrop-blur-md">
-              <div className="flex items-center gap-3">
-                <div className="flex size-10 items-center justify-center rounded-full bg-petala text-noite-900">
-                  <Feather className="size-4" aria-hidden />
-                </div>
-                <div>
-                  <p className="text-xs font-medium tracking-wider text-cinza uppercase">Tecnologia</p>
-                  <p className="text-sm font-semibold">Zero Frizz Garantido</p>
-                </div>
-              </div>
-              <span className="rounded-full bg-folha px-3 py-1 text-xs font-semibold whitespace-nowrap text-white">
-                Alta Gramatura
-              </span>
-            </div>
-          </div>
-        </div>
+      <div className="flex flex-col items-center justify-center gap-3 px-4 pt-2 pb-8 sm:absolute sm:inset-x-0 sm:bottom-[6%] sm:flex-row sm:gap-4 sm:p-0">
+        <Link href="/vitrine" className={`${btn} bg-noite-900 text-leite hover:bg-noite-900/90`}>
+          Conheça a coleção
+        </Link>
+        <a href="#manifesto" className={`${btn} bg-leite/95 text-noite-900 hover:bg-petala`}>
+          Nossa história
+        </a>
       </div>
     </section>
   )

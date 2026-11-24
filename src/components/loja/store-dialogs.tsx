@@ -79,15 +79,17 @@ function ReelModal({ reel }: { reel: Reel }) {
   return (
     <Dialog label={reel.title} onClose={closeDialog} panelClassName="max-w-md overflow-hidden bg-black text-white">
       <CloseButton onClick={closeDialog} className="z-20 bg-white/20 text-white hover:bg-white/40" />
-      {/* TODO: trocar a capa pelo <video> do reel */}
-      <div className="relative flex h-[550px] items-center justify-center bg-grafite">
-        <img src={reel.video} alt="" className="size-full object-cover" />
-        <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/90 to-transparent p-6 text-left">
-          <span className="rounded-full bg-salvia px-3 py-1 text-xs font-medium">Líriou Reels</span>
-          <h2 className="mt-2 font-serif text-2xl">{reel.title}</h2>
-          <p className="mt-1 text-xs text-white/70">Demonstração real do ritual com cetim de alta gramatura.</p>
-        </div>
-      </div>
+      <video
+        src={reel.video}
+        autoPlay
+        controls
+        playsInline
+        loop
+        className="max-h-[85vh] w-full bg-black object-contain"
+      >
+        Seu navegador não conseguiu reproduzir este vídeo.
+      </video>
+      {reel.caption && <p className="p-4 text-center font-serif text-lg">{reel.caption}</p>}
     </Dialog>
   )
 }

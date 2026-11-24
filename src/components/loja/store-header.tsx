@@ -9,9 +9,6 @@ import { Wordmark } from './wordmark'
 const NAV = [
   { href: '/#manifesto', label: 'Nossa história' },
   { href: '/vitrine', label: 'Comprar' },
-  { href: '/vitrine?categoria=kit', label: 'Kits' },
-  { href: '/#ritual', label: 'Cuidados com o cabelo' },
-  { href: '/vitrine?ordem=novidades', label: 'Novidades' },
 ]
 
 export function StoreHeader() {

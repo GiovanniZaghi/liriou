@@ -32,7 +32,7 @@ export default async function VitrinePage({ searchParams }: { searchParams: Sear
         <span className="eyebrow text-rubor">Vitrine</span>
         <h1 className="mt-2 font-serif text-4xl text-grafite sm:text-5xl">Toda a coleção</h1>
         <p className="mx-auto mt-3 max-w-xl text-sm text-cinza">
-          Cetim de alta gramatura, acabamento de alfaiataria e cores pensadas para o seu ritual.
+          Peças feitas para o dia a dia, com toque macio e cores pensadas para cuidar do seu cabelo com carinho e estilo.
         </p>
       </header>
 

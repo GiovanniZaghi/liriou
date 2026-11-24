@@ -1,8 +1,8 @@
-import { Play, Star } from 'lucide-react'
+import { Star } from 'lucide-react'
 import { reels, testimonials } from '@/lib/content'
 import { SectionTitle } from './section-title'
 import { sectionPad } from './styles'
-import { DialogTrigger } from './triggers'
+import { ReelCard } from './reel-card'
 
 export function Reels() {
   return (
@@ -12,42 +12,17 @@ export function Reels() {
           <div>
             <span className="eyebrow text-rubor">Experiência Real</span>
             <h2 id="ritual-titulo" className="mt-2 font-serif text-3xl text-grafite sm:text-4xl">
-              O Ritual em Movimento
+              Detalhes que você sente
             </h2>
           </div>
           <p className="mt-2 max-w-md text-sm text-cinza md:mt-0">
-            Assista aos vídeos reais das nossas embaixadoras e entenda como aplicar o cetim na sua rotina noturna.
+            Confira o movimento do tecido, as combinações de cor e a praticidade das peças fora do catálogo.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {reels.map((reel, i) => (
-            <DialogTrigger
-              key={reel.title}
-              dialog={{ type: 'reel', reel }}
-              data-reveal
-              style={{ '--i': i } as React.CSSProperties}
-              aria-label={`Assistir: ${reel.title}`}
-              className="group relative h-[400px] overflow-hidden rounded-3xl bg-black/90 text-left shadow-lg"
-            >
-              <img
-                src={reel.cover}
-                alt=""
-                className="size-full object-cover opacity-80 transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 flex flex-col justify-between bg-linear-to-t from-black/80 via-transparent to-transparent p-6 text-white">
-                <div className="flex items-center justify-between">
-                  <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-medium backdrop-blur-md">@lirio.u</span>
-                  <span className="rounded-full bg-white/30 p-2.5 backdrop-blur-md">
-                    <Play className="size-3 fill-current" aria-hidden />
-                  </span>
-                </div>
-                <div>
-                  <p className="font-serif text-lg">{reel.caption}</p>
-                  <p className="mt-1 text-xs text-white/70">Toque para ver o vídeo</p>
-                </div>
-              </div>
-            </DialogTrigger>
+            <ReelCard key={reel.video} reel={reel} index={i} />
           ))}
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { Gem, HeartHandshake, Moon } from 'lucide-react'
+import { Feather, HeartHandshake, SunMoon } from 'lucide-react'
 
 export function Manifesto() {
   return (
@@ -20,9 +20,9 @@ export function Manifesto() {
 }
 
 const TRUST = [
-  { icon: HeartHandshake, title: 'Cuidando de Você', text: 'Acolhimento e afeto no autocuidado' },
-  { icon: Moon, title: 'Alta Performance Noturna', text: 'Acorde com o cabelo intacto' },
-  { icon: Gem, title: 'Cetim Premium', text: 'O verdadeiro padrão anti-frizz' },
+  { icon: HeartHandshake, title: 'Cuidando do seu cabelo com carinho', text: 'Leveza e afeto nos pequenos gestos do dia' },
+  { icon: Feather, title: 'Sem marcar, sem apertar', text: 'Conforto real no cabelo e praticidade' },
+  { icon: SunMoon, title: 'Feita para o dia a dia', text: 'Do corre da rotina ao descanso de verdade' },
 ]
 
 export function TrustBar() {

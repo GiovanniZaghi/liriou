@@ -6,34 +6,11 @@ export const CREATOR_KITS = [
   { value: 'kit-trio-completo', label: 'Kit Trio Completo', detail: 'Caixa especial presente' },
 ] as const
 
-const ph = (size: string, bg: string, fg: string, text: string) =>
-  `https://placehold.co/${size}/${bg}/${fg}?text=${encodeURIComponent(text).replace(/%20/g, '+')}`
-
-export const reels = [
-  {
-    title: 'Ritual noturno com Scrunchie Classic',
-    caption: 'Como blindar os fios antes de dormir',
-    cover: ph('600x800', '6A7B6C', 'FFFFFF', 'Ritual Noturno'),
-    video: ph('600x900', '6A7B6C', 'FFFFFF', 'Reel 1'),
-  },
-  {
-    title: 'Acordando sem frizz',
-    caption: 'O resultado do cetim de alta gramatura',
-    cover: ph('600x800', 'F2D3D8', '2C2A29', 'Acordando Sem Frizz'),
-    video: ph('600x900', 'F2D3D8', '2C2A29', 'Reel 2'),
-  },
-  {
-    title: '5 penteados com scrunchie',
-    caption: '1 scrunchie, 5 penteados sofisticados',
-    cover: ph('600x800', '2C2A29', 'FFFFFF', 'Penteados Liriou'),
-    video: ph('600x900', '2C2A29', 'FFFFFF', 'Reel 3'),
-  },
-  {
-    title: 'Unboxing exclusivo Líriou',
-    caption: 'O unboxing do nosso kit de pré-venda',
-    cover: ph('600x800', 'E8E2DD', '2C2A29', 'Unboxing Liriou'),
-    video: ph('600x900', 'E8E2DD', '2C2A29', 'Reel 4'),
-  },
+/** Vídeos em public/videos. Legenda é opcional (aparece no card e no vídeo aberto). */
+export const reels: { title: string; caption?: string; video: string }[] = [
+  { title: 'Vídeo Líriou 1', video: '/videos/reel-1.mp4' },
+  { title: 'Vídeo Líriou 2', video: '/videos/reel-2.mp4' },
+  { title: 'Vídeo Líriou 3', video: '/videos/reel-3.mp4' },
 ]
 
 export type Reel = (typeof reels)[number]

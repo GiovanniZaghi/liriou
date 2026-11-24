@@ -18,9 +18,9 @@ export function Collection({ products }: { products: CatalogProduct[] }) {
     <section id="colecao" aria-labelledby="colecao-titulo" className={`mx-auto max-w-7xl scroll-mt-20 ${sectionPad}`}>
       <SectionTitle
         id="colecao-titulo"
-        eyebrow="Vitrine Exclusiva"
-        title="Essenciais para o seu ritual"
-        description="Desenvolvidas com rigor estético, acabamento impecável em alfaiataria e alta gramatura."
+        eyebrow="Coleção Lirio.u"
+        title="Feitas para cuidar com carinho"
+        description="Modelagem pensada para o uso real, com toque macio e cores fáceis de combinar no cabelo ou no pulso."
       />
       {products.length === 0 ? (
         <p className="rounded-3xl border border-borda bg-white p-10 text-center text-sm text-cinza">
