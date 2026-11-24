@@ -4,16 +4,17 @@ export function Manifesto() {
   return (
     <section id="manifesto" className="mx-auto max-w-4xl scroll-mt-20 space-y-8 px-4 py-24 text-center sm:px-6 lg:px-8">
       <span data-reveal className="eyebrow block text-rubor">
-        O Nosso Manifesto
+        Nossa história
       </span>
-      <h2 data-reveal style={{ '--i': 1 } as React.CSSProperties} className="font-serif text-3xl leading-snug text-grafite sm:text-5xl">
-        “Acreditamos que o verdadeiro luxo não precisa fazer barulho. Ele se sente no toque, na suavidade do tecido e
-        no cuidado intencional de cada detalhe.”
+      <h2 data-reveal style={{ '--i': 1 } as React.CSSProperties} className="font-serif text-2xl leading-snug text-grafite sm:text-4xl">
+        A Lirio.u nasceu de uma necessidade real da Mari: ter peças práticas, bonitas e macias para cuidar do cabelo
+        sem depender de elástico comum.
       </h2>
       <div className="mx-auto h-1 w-16 rounded-full bg-petala" />
       <p className="mx-auto max-w-2xl text-sm leading-relaxed font-light text-cinza sm:text-base">
-        A Líriou nasceu para transformar gestos simples do dia a dia, como prender o cabelo ou preparar a rotina para
-        dormir, em rituais de alta performance e beleza atemporal.
+        Entre a correria do dia a dia, a vontade de manter os fios bem cuidados e o olhar de quem entende de moda e
+        modelagem, surgiu a ideia de criar scrunchies de cetim que funcionam de verdade: confortáveis no cabelo, bonitas
+        no pulso e feitas para acompanhar a sua rotina com carinho.
       </p>
     </section>
   )
