@@ -1,4 +1,4 @@
-import type { OrderStatus, PaymentMethod, PaymentStatus } from './api/types'
+import type { FulfillmentStage, OrderStatus, PaymentMethod, PaymentStatus } from './api/types'
 
 /** Rótulo e cor de cada status do pedido. */
 export const ORDER_STATUS: Record<OrderStatus, { label: string; tone: string }> = {
@@ -44,3 +44,16 @@ const SHIPMENT_STATUS_LABEL: Record<string, string> = {
 }
 
 export const shipmentStatusLabel = (status: string) => SHIPMENT_STATUS_LABEL[status] ?? status
+
+/** Etapas que a cliente acompanha (e o dashboard mostra) */
+export const FULFILLMENT_STAGE: Record<FulfillmentStage, { label: string; tone: string }> = {
+  recebido: { label: 'Recebido', tone: 'bg-[#fde9c8] text-[#8a5a00]' },
+  pago: { label: 'Pago', tone: 'bg-folha/12 text-folha' },
+  separando: { label: 'Separando', tone: 'bg-[#e4ecf7] text-[#2c4f7c]' },
+  enviado: { label: 'Enviado', tone: 'bg-[#e4ecf7] text-[#2c4f7c]' },
+  entregue: { label: 'Entregue', tone: 'bg-folha text-white' },
+  cancelado: { label: 'Cancelado', tone: 'bg-linho text-musgo' },
+}
+
+/** Ordem da linha do tempo (Cancelado fica de fora) */
+export const FULFILLMENT_STEPS: Exclude<FulfillmentStage, 'cancelado'>[] = ['recebido', 'pago', 'separando', 'enviado', 'entregue']

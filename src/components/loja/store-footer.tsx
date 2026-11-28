@@ -45,6 +45,9 @@ export function StoreFooter() {
           <Link href="/vitrine" className={link}>
             Vitrine
           </Link>
+          <Link href="/meus-pedidos" className={link}>
+            Meus pedidos
+          </Link>
           <DialogTrigger dialog={{ type: 'creator' }} className={link}>
             Seja Creator
           </DialogTrigger>

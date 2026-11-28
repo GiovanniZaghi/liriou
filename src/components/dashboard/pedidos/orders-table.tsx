@@ -4,7 +4,8 @@ import type { AdminOrderRow } from '@/lib/api/types'
 import { formatBRL, formatDateTime } from '@/lib/format'
 import { PAYMENT_METHOD_LABEL, PAYMENT_STATUS, shipmentStatusLabel } from '@/lib/orders'
 import { cn } from '@/lib/utils'
-import { OrderStatusBadge } from './order-badges'
+import { DeliveredButton } from './delivered-button'
+import { FulfillmentBadge } from './order-badges'
 
 export function OrdersTable({ rows, emptyMessage = 'Nenhum pedido encontrado.' }: { rows: AdminOrderRow[]; emptyMessage?: string }) {
   if (rows.length === 0) {
@@ -15,16 +16,17 @@ export function OrdersTable({ rows, emptyMessage = 'Nenhum pedido encontrado.' }
 
   return (
     <div className="overflow-x-auto rounded-[20px] border border-linho bg-white">
-      <table className="w-full min-w-[960px] text-left text-[14px]">
+      <table className="w-full min-w-[1080px] text-left text-[14px]">
         <thead className="border-b border-linho text-[12px] font-semibold tracking-[0.08em] text-musgo uppercase">
           <tr>
             <th scope="col" className="px-5 py-3.5 font-semibold">Pedido</th>
             <th scope="col" className="px-5 py-3.5 font-semibold">Cliente</th>
-            <th scope="col" className="px-5 py-3.5 font-semibold">Status</th>
+            <th scope="col" className="px-5 py-3.5 font-semibold">Etapa</th>
             <th scope="col" className="px-5 py-3.5 font-semibold">Pagamento</th>
             <th scope="col" className="px-5 py-3.5 font-semibold">Envio</th>
             <th scope="col" className="px-5 py-3.5 text-right font-semibold">Itens</th>
             <th scope="col" className="px-5 py-3.5 text-right font-semibold">Total</th>
+            <th scope="col" className="px-5 py-3.5 text-right font-semibold"><span className="sr-only">Ações</span></th>
           </tr>
         </thead>
         <tbody>
@@ -55,7 +57,7 @@ export function OrdersTable({ rows, emptyMessage = 'Nenhum pedido encontrado.' }
                 </Link>
               </td>
               <td className="px-5 py-3">
-                <OrderStatusBadge status={o.status} />
+                <FulfillmentBadge stage={o.stage} />
               </td>
               <td className="px-5 py-3 text-[13px]">
                 {o.payment ? (
@@ -80,7 +82,7 @@ export function OrdersTable({ rows, emptyMessage = 'Nenhum pedido encontrado.' }
                       <span className="block font-mono text-[12px] text-musgo">{o.shipment.trackingNumber}</span>
                     )}
                   </>
-                ) : o.status === 'pago' ? (
+                ) : o.status === 'pago' && !o.deliveredAt ? (
                   <span className="inline-flex items-center gap-1 font-medium text-rubor">
                     <Truck className="size-3.5" aria-hidden /> A enviar
                   </span>
@@ -90,6 +92,9 @@ export function OrdersTable({ rows, emptyMessage = 'Nenhum pedido encontrado.' }
               </td>
               <td className="px-5 py-3 text-right tabular-nums">{o.itemCount}</td>
               <td className="px-5 py-3 text-right font-semibold whitespace-nowrap tabular-nums">{formatBRL(o.total)}</td>
+              <td className="px-5 py-3 text-right">
+                {(o.deliveredAt || o.status === 'pago') && <DeliveredButton orderId={o.id} delivered={Boolean(o.deliveredAt)} />}
+              </td>
             </tr>
           ))}
         </tbody>

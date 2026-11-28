@@ -3,7 +3,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound, unstable_rethrow } from 'next/navigation'
 import { dashBtn, PageHeader, pageShell } from '@/components/dashboard/page-header'
-import { OrderStatusBadge } from '@/components/dashboard/pedidos/order-badges'
+import { DeliveredButton } from '@/components/dashboard/pedidos/delivered-button'
+import { FulfillmentBadge, OrderStatusBadge } from '@/components/dashboard/pedidos/order-badges'
 import { ShipmentCard } from '@/components/dashboard/pedidos/shipment-card'
 import { getOrder, getShipment } from '@/lib/api/admin'
 import { ApiError } from '@/lib/api/http'
@@ -132,6 +133,21 @@ export default async function PedidoDetalhePage({ params }: { params: Params }) 
         </div>
 
         <aside className="space-y-4">
+          {order.status === 'pago' && (
+            <Card title="Entrega à cliente">
+              <div className="mb-3 flex items-center gap-2 text-[13px] text-musgo">
+                Etapa que a cliente vê: <FulfillmentBadge stage={order.stage} />
+              </div>
+              {order.deliveredAt ? (
+                <p className="mb-3 text-[13px] text-musgo">
+                  Entregue em {formatDateTime(new Date(order.deliveredAt))}. O pedido está em “Ocultos”.
+                </p>
+              ) : (
+                <p className="mb-3 text-[13px] text-musgo">Quando a cliente receber, marque aqui: o pedido sai da fila principal.</p>
+              )}
+              <DeliveredButton orderId={order.id} delivered={Boolean(order.deliveredAt)} size="md" />
+            </Card>
+          )}
           <Card title="Cliente">
             <dl className="space-y-1.5">
               <Field label="Nome" value={c.name} />

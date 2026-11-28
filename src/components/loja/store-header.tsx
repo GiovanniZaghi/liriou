@@ -1,6 +1,6 @@
 'use client'
 
-import { Menu, Search, ShoppingBag, Sparkles, X } from 'lucide-react'
+import { Menu, Package, Search, ShoppingBag, Sparkles, X } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useStore } from './store-provider'
@@ -59,6 +59,14 @@ export function StoreHeader() {
             >
               <Search className="size-4" aria-hidden />
             </button>
+            <Link
+              href="/meus-pedidos"
+              aria-label="Meus pedidos"
+              title="Meus pedidos"
+              className="rounded-full p-2 text-grafite transition-colors hover:bg-algodao"
+            >
+              <Package className="size-4" aria-hidden />
+            </Link>
             <button
               type="button"
               onClick={() => openDialog({ type: 'cart' })}
@@ -90,6 +98,9 @@ export function StoreHeader() {
                   {item.label}
                 </Link>
               ))}
+              <Link href="/meus-pedidos" onClick={closeMenu} className="text-grafite">
+                Meus pedidos
+              </Link>
             </nav>
           </div>
         )}

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { dashControl, PageHeader, pageShell } from '@/components/dashboard/page-header'
+import { EyeOff } from 'lucide-react'
 import { Pagination } from '@/components/dashboard/pagination'
 import { OrdersTable } from '@/components/dashboard/pedidos/orders-table'
 import { getOrdersSummary, listOrders, ORDERS_PAGE_SIZE } from '@/lib/api/admin'
@@ -12,7 +13,7 @@ import { cn } from '@/lib/utils'
 export const metadata: Metadata = { title: 'Pedidos · Dashboard Líriou' }
 export const dynamic = 'force-dynamic'
 
-type SearchParams = Promise<{ q?: string; status?: string; enviar?: string; page?: string }>
+type SearchParams = Promise<{ q?: string; status?: string; enviar?: string; ocultos?: string; page?: string }>
 
 export default async function PedidosPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams
@@ -20,9 +21,10 @@ export default async function PedidosPage({ searchParams }: { searchParams: Sear
     q: params.q?.trim().slice(0, 100) || undefined,
     status: ORDER_STATUS_OPTIONS.some((o) => o.value === params.status) ? (params.status as OrderStatus) : undefined,
     toShip: params.enviar === '1' || undefined,
+    hidden: params.ocultos === '1' || undefined,
     page: Math.max(1, Number(params.page) || 1),
   }
-  const hasFilters = Boolean(filters.q || filters.status || filters.toShip)
+  const hasFilters = Boolean(filters.q || filters.status || filters.toShip || filters.hidden)
 
   const [summary, orders] = await Promise.all([getOrdersSummary(), listOrders(filters)])
 
@@ -36,12 +38,19 @@ export default async function PedidosPage({ searchParams }: { searchParams: Sear
         <div className="mb-4 flex flex-wrap items-end justify-between gap-4">
           <div>
             <h2 id="pedidos-titulo" className="font-serif text-[32px] leading-none text-noite-900">
-              {filters.toShip ? 'A enviar' : filters.status ? ORDER_STATUS_OPTIONS.find((o) => o.value === filters.status)?.label : 'Todos os pedidos'}
+              {filters.hidden ? 'Ocultos (entregues)' : filters.toShip ? 'A enviar' : filters.status ? ORDER_STATUS_OPTIONS.find((o) => o.value === filters.status)?.label : 'Todos os pedidos'}
             </h2>
             <p className="mt-1 text-[14px] text-musgo">
               {formatNumber(orders.meta.total)} {orders.meta.total === 1 ? 'pedido' : 'pedidos'}
               {hasFilters ? ' com os filtros atuais' : ''} · mais recentes primeiro
             </p>
+            <Link
+              href={filters.hidden ? '/dashboard/pedidos' : '/dashboard/pedidos?ocultos=1'}
+              className="mt-2 inline-flex items-center gap-1.5 text-[13px] font-medium text-musgo underline hover:text-noite-900"
+            >
+              <EyeOff className="size-3.5" aria-hidden />
+              {filters.hidden ? 'Voltar para a fila' : `Ver ocultos (${formatNumber(summary.hidden)})`}
+            </Link>
           </div>
 
           <form role="search" className="flex flex-wrap items-center gap-2">
@@ -54,6 +63,7 @@ export default async function PedidosPage({ searchParams }: { searchParams: Sear
               {ORDER_STATUS_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
             {filters.toShip && <input type="hidden" name="enviar" value="1" />}
+            {filters.hidden && <input type="hidden" name="ocultos" value="1" />}
             <button type="submit" className="h-11 cursor-pointer rounded-full bg-noite-900 px-5 text-[14px] font-semibold text-leite hover:bg-noite-800">
               Filtrar
             </button>
@@ -63,10 +73,13 @@ export default async function PedidosPage({ searchParams }: { searchParams: Sear
           </form>
         </div>
 
-        <OrdersTable rows={orders.data} />
+        <OrdersTable
+          rows={orders.data}
+          emptyMessage={filters.hidden ? 'Nenhum pedido oculto. Pedidos marcados como entregues aparecem aqui.' : undefined}
+        />
         <Pagination
           basePath="/dashboard/pedidos"
-          query={{ q: filters.q, status: filters.status, enviar: filters.toShip ? '1' : undefined }}
+          query={{ q: filters.q, status: filters.status, enviar: filters.toShip ? '1' : undefined, ocultos: filters.hidden ? '1' : undefined }}
           page={filters.page ?? 1}
           total={orders.meta.total}
           pageSize={ORDERS_PAGE_SIZE}

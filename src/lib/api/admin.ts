@@ -115,12 +115,18 @@ export const ORDERS_PAGE_SIZE = 30
 
 export const getOrdersSummary = () => adminFetch<OrdersSummary>('/admin/orders/summary')
 
-export const listOrders = ({ q, status, toShip, page = 1 }: OrderFilters) =>
+export const listOrders = ({ q, status, toShip, hidden, page = 1 }: OrderFilters) =>
   adminFetch<Paginated<AdminOrderRow>>(
-    `/admin/orders${toQuery({ q, status, toShip: toShip || undefined, page, pageSize: ORDERS_PAGE_SIZE })}`,
+    `/admin/orders${toQuery({ q, status, toShip: toShip || undefined, hidden: hidden || undefined, page, pageSize: ORDERS_PAGE_SIZE })}`,
   )
 
 export const getOrder = (id: string) => adminFetch<AdminOrderDetail>(`/admin/orders/${id}`)
+
+/** Check "Entregue / Recebido pela cliente" (oculta da fila) */
+export const markOrderDelivered = (id: string) => adminFetch<void>(`/admin/orders/${id}/delivered`, { method: 'POST' })
+
+/** Desocultar (desfaz o entregue) */
+export const unhideOrder = (id: string) => adminFetch<void>(`/admin/orders/${id}/delivered`, { method: 'DELETE' })
 
 // ─── Envios (Frenet) ──────────────────────────────────────────────────────────
 

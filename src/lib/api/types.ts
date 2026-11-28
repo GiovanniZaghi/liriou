@@ -403,6 +403,10 @@ export interface AdminOrderRow {
   /** Tentativa de pagamento mais recente */
   payment: { method: PaymentMethod; status: PaymentStatus; installments: number } | null
   shipment: { status: string; trackingNumber: string | null } | null
+  /** Etapa que a cliente vê */
+  stage: FulfillmentStage
+  /** Entregue / recebido pela cliente (oculto da fila) */
+  deliveredAt: string | null
   createdAt: string
 }
 
@@ -427,12 +431,16 @@ export interface OrdersSummary {
   paidValue: number
   awaitingValue: number
   today: number
+  /** Entregues (aba Ocultos) */
+  hidden: number
 }
 
 export interface OrderFilters {
   q?: string
   status?: OrderStatus
   toShip?: boolean
+  /** Só os ocultos (entregues) */
+  hidden?: boolean
   page?: number
 }
 
@@ -478,4 +486,33 @@ export interface CouponPayload {
   endsAt: string | null
   maxUses: number | null
   isActive: boolean
+}
+
+// ─── Área da cliente ──────────────────────────────────────────────────────────
+
+/** Recebido → Pago → Separando → Enviado → Entregue (ou Cancelado) */
+export type FulfillmentStage = 'recebido' | 'pago' | 'separando' | 'enviado' | 'entregue' | 'cancelado'
+
+export interface CustomerOrder {
+  number: number
+  status: OrderStatus
+  stage: FulfillmentStage
+  total: number
+  items: { name: string; quantity: number; image: string }[]
+  shipping: { label: string; pickup: boolean; deliveryDays: number | null }
+  tracking: {
+    number: string | null
+    url: string | null
+    lastEvent: { at: string; description: string; location: string } | null
+  } | null
+  giftWrap: boolean
+  city: string | null
+  state: string | null
+  deliveredAt: string | null
+  createdAt: string
+}
+
+export interface CustomerOrdersLookup {
+  firstName: string | null
+  orders: CustomerOrder[]
 }
